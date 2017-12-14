@@ -1,4 +1,4 @@
-﻿namespace BabinGUI
+﻿namespace GUI
 {
     partial class frmMain
     {
@@ -33,7 +33,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.txtAccountNumber = new System.Windows.Forms.TextBox();
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.numericUpDown2 = new System.Windows.Forms.NumericUpDown();
             this.numericUpDown3 = new System.Windows.Forms.NumericUpDown();
@@ -43,8 +43,6 @@
             this.numericUpDown4 = new System.Windows.Forms.NumericUpDown();
             this.button1 = new System.Windows.Forms.Button();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.radioButton1 = new System.Windows.Forms.RadioButton();
-            this.radioButton2 = new System.Windows.Forms.RadioButton();
             this.Id = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Account = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Ticker = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -53,7 +51,18 @@
             this.RiskPercent = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.DollarValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Delete = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.listBox1 = new System.Windows.Forms.ListBox();
+            this.radioButton1 = new System.Windows.Forms.RadioButton();
+            this.radioButton2 = new System.Windows.Forms.RadioButton();
+            this.lstNotifications = new System.Windows.Forms.ListBox();
+            this.lblConnectionStatus = new System.Windows.Forms.Label();
+            this.lblForAvailableFunds = new System.Windows.Forms.Label();
+            this.lblAvailableFunds = new System.Windows.Forms.Label();
+            this.lblForAccountValue = new System.Windows.Forms.Label();
+            this.lblAccountValue = new System.Windows.Forms.Label();
+            this.lblForPositionSize = new System.Windows.Forms.Label();
+            this.lblPositionSize = new System.Windows.Forms.Label();
+            this.lblForNumberOfShares = new System.Windows.Forms.Label();
+            this.lblNumberOfShares = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
@@ -69,7 +78,6 @@
             this.label1.Size = new System.Drawing.Size(40, 13);
             this.label1.TabIndex = 0;
             this.label1.Text = "Ticker:";
-            this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // label2
             // 
@@ -98,33 +106,35 @@
             this.label4.TabIndex = 3;
             this.label4.Text = "Account:";
             // 
-            // textBox1
+            // txtAccountNumber
             // 
-            this.textBox1.Location = new System.Drawing.Point(68, 12);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(100, 20);
-            this.textBox1.TabIndex = 4;
+            this.txtAccountNumber.Enabled = false;
+            this.txtAccountNumber.Location = new System.Drawing.Point(68, 12);
+            this.txtAccountNumber.Name = "txtAccountNumber";
+            this.txtAccountNumber.Size = new System.Drawing.Size(100, 20);
+            this.txtAccountNumber.TabIndex = 4;
+            this.txtAccountNumber.Text = "DU271448";
             // 
             // textBox2
             // 
             this.textBox2.Location = new System.Drawing.Point(168, 44);
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(120, 20);
-            this.textBox2.TabIndex = 5;
+            this.textBox2.TabIndex = 0;
             // 
             // numericUpDown2
             // 
             this.numericUpDown2.Location = new System.Drawing.Point(168, 91);
             this.numericUpDown2.Name = "numericUpDown2";
             this.numericUpDown2.Size = new System.Drawing.Size(120, 20);
-            this.numericUpDown2.TabIndex = 8;
+            this.numericUpDown2.TabIndex = 2;
             // 
             // numericUpDown3
             // 
             this.numericUpDown3.Location = new System.Drawing.Point(168, 68);
             this.numericUpDown3.Name = "numericUpDown3";
             this.numericUpDown3.Size = new System.Drawing.Size(120, 20);
-            this.numericUpDown3.TabIndex = 10;
+            this.numericUpDown3.TabIndex = 1;
             // 
             // label5
             // 
@@ -140,7 +150,7 @@
             this.numericUpDown1.Location = new System.Drawing.Point(168, 136);
             this.numericUpDown1.Name = "numericUpDown1";
             this.numericUpDown1.Size = new System.Drawing.Size(120, 20);
-            this.numericUpDown1.TabIndex = 12;
+            this.numericUpDown1.TabIndex = 3;
             // 
             // label6
             // 
@@ -156,19 +166,20 @@
             this.numericUpDown4.Location = new System.Drawing.Point(168, 160);
             this.numericUpDown4.Name = "numericUpDown4";
             this.numericUpDown4.Size = new System.Drawing.Size(120, 20);
-            this.numericUpDown4.TabIndex = 14;
+            this.numericUpDown4.TabIndex = 5;
             // 
             // button1
             // 
             this.button1.Location = new System.Drawing.Point(213, 194);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 15;
+            this.button1.TabIndex = 7;
             this.button1.Text = "Place Order";
             this.button1.UseVisualStyleBackColor = true;
             // 
             // dataGridView1
             // 
+            this.dataGridView1.AllowUserToAddRows = false;
             this.dataGridView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -184,9 +195,61 @@
             this.Delete});
             this.dataGridView1.Location = new System.Drawing.Point(12, 225);
             this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.ReadOnly = true;
             this.dataGridView1.RowHeadersVisible = false;
-            this.dataGridView1.Size = new System.Drawing.Size(683, 288);
-            this.dataGridView1.TabIndex = 16;
+            this.dataGridView1.Size = new System.Drawing.Size(683, 319);
+            this.dataGridView1.TabIndex = 0;
+            this.dataGridView1.TabStop = false;
+            // 
+            // Id
+            // 
+            this.Id.HeaderText = "Id";
+            this.Id.Name = "Id";
+            this.Id.ReadOnly = true;
+            this.Id.Width = 30;
+            // 
+            // Account
+            // 
+            this.Account.HeaderText = "Account";
+            this.Account.Name = "Account";
+            this.Account.ReadOnly = true;
+            // 
+            // Ticker
+            // 
+            this.Ticker.HeaderText = "Ticker";
+            this.Ticker.Name = "Ticker";
+            this.Ticker.ReadOnly = true;
+            // 
+            // Stop
+            // 
+            this.Stop.HeaderText = "Stop";
+            this.Stop.Name = "Stop";
+            this.Stop.ReadOnly = true;
+            // 
+            // StopBuyLimit
+            // 
+            this.StopBuyLimit.HeaderText = "Stop Buy Limit";
+            this.StopBuyLimit.Name = "StopBuyLimit";
+            this.StopBuyLimit.ReadOnly = true;
+            // 
+            // RiskPercent
+            // 
+            this.RiskPercent.HeaderText = "Risk ";
+            this.RiskPercent.Name = "RiskPercent";
+            this.RiskPercent.ReadOnly = true;
+            // 
+            // DollarValue
+            // 
+            this.DollarValue.HeaderText = "$ Value";
+            this.DollarValue.Name = "DollarValue";
+            this.DollarValue.ReadOnly = true;
+            // 
+            // Delete
+            // 
+            this.Delete.HeaderText = "Delete";
+            this.Delete.Name = "Delete";
+            this.Delete.ReadOnly = true;
+            this.Delete.Width = 50;
             // 
             // radioButton1
             // 
@@ -195,7 +258,7 @@
             this.radioButton1.Location = new System.Drawing.Point(297, 140);
             this.radioButton1.Name = "radioButton1";
             this.radioButton1.Size = new System.Drawing.Size(14, 13);
-            this.radioButton1.TabIndex = 17;
+            this.radioButton1.TabIndex = 4;
             this.radioButton1.TabStop = true;
             this.radioButton1.UseVisualStyleBackColor = true;
             // 
@@ -205,67 +268,115 @@
             this.radioButton2.Location = new System.Drawing.Point(297, 164);
             this.radioButton2.Name = "radioButton2";
             this.radioButton2.Size = new System.Drawing.Size(14, 13);
-            this.radioButton2.TabIndex = 18;
+            this.radioButton2.TabIndex = 6;
             this.radioButton2.UseVisualStyleBackColor = true;
             // 
-            // Id
+            // lstNotifications
             // 
-            this.Id.HeaderText = "Id";
-            this.Id.Name = "Id";
-            this.Id.Width = 30;
-            // 
-            // Account
-            // 
-            this.Account.HeaderText = "Account";
-            this.Account.Name = "Account";
-            // 
-            // Ticker
-            // 
-            this.Ticker.HeaderText = "Ticker";
-            this.Ticker.Name = "Ticker";
-            // 
-            // Stop
-            // 
-            this.Stop.HeaderText = "Stop";
-            this.Stop.Name = "Stop";
-            // 
-            // StopBuyLimit
-            // 
-            this.StopBuyLimit.HeaderText = "Stop Buy Limit";
-            this.StopBuyLimit.Name = "StopBuyLimit";
-            // 
-            // RiskPercent
-            // 
-            this.RiskPercent.HeaderText = "Risk ";
-            this.RiskPercent.Name = "RiskPercent";
-            // 
-            // DollarValue
-            // 
-            this.DollarValue.HeaderText = "$ Value";
-            this.DollarValue.Name = "DollarValue";
-            // 
-            // Delete
-            // 
-            this.Delete.HeaderText = "Delete";
-            this.Delete.Name = "Delete";
-            this.Delete.Width = 50;
-            // 
-            // listBox1
-            // 
-            this.listBox1.FormattingEnabled = true;
-            this.listBox1.Items.AddRange(new object[] {
+            this.lstNotifications.FormattingEnabled = true;
+            this.lstNotifications.Items.AddRange(new object[] {
             "Notifications"});
-            this.listBox1.Location = new System.Drawing.Point(347, 44);
-            this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(348, 173);
-            this.listBox1.TabIndex = 19;
+            this.lstNotifications.Location = new System.Drawing.Point(12, 550);
+            this.lstNotifications.Name = "lstNotifications";
+            this.lstNotifications.Size = new System.Drawing.Size(683, 82);
+            this.lstNotifications.TabIndex = 19;
+            // 
+            // lblConnectionStatus
+            // 
+            this.lblConnectionStatus.AutoSize = true;
+            this.lblConnectionStatus.Location = new System.Drawing.Point(174, 15);
+            this.lblConnectionStatus.Name = "lblConnectionStatus";
+            this.lblConnectionStatus.Size = new System.Drawing.Size(79, 13);
+            this.lblConnectionStatus.TabIndex = 20;
+            this.lblConnectionStatus.Text = "Not Connected";
+            // 
+            // lblForAvailableFunds
+            // 
+            this.lblForAvailableFunds.AutoSize = true;
+            this.lblForAvailableFunds.Location = new System.Drawing.Point(397, 47);
+            this.lblForAvailableFunds.Name = "lblForAvailableFunds";
+            this.lblForAvailableFunds.Size = new System.Drawing.Size(85, 13);
+            this.lblForAvailableFunds.TabIndex = 21;
+            this.lblForAvailableFunds.Text = "Available Funds:";
+            // 
+            // lblAvailableFunds
+            // 
+            this.lblAvailableFunds.AutoSize = true;
+            this.lblAvailableFunds.Location = new System.Drawing.Point(501, 47);
+            this.lblAvailableFunds.Name = "lblAvailableFunds";
+            this.lblAvailableFunds.Size = new System.Drawing.Size(82, 13);
+            this.lblAvailableFunds.TabIndex = 22;
+            this.lblAvailableFunds.Text = "Available Funds";
+            // 
+            // lblForAccountValue
+            // 
+            this.lblForAccountValue.AutoSize = true;
+            this.lblForAccountValue.Location = new System.Drawing.Point(397, 70);
+            this.lblForAccountValue.Name = "lblForAccountValue";
+            this.lblForAccountValue.Size = new System.Drawing.Size(80, 13);
+            this.lblForAccountValue.TabIndex = 23;
+            this.lblForAccountValue.Text = "Account Value:";
+            // 
+            // lblAccountValue
+            // 
+            this.lblAccountValue.AutoSize = true;
+            this.lblAccountValue.Location = new System.Drawing.Point(501, 70);
+            this.lblAccountValue.Name = "lblAccountValue";
+            this.lblAccountValue.Size = new System.Drawing.Size(77, 13);
+            this.lblAccountValue.TabIndex = 24;
+            this.lblAccountValue.Text = "Account Value";
+            // 
+            // lblForPositionSize
+            // 
+            this.lblForPositionSize.AutoSize = true;
+            this.lblForPositionSize.Location = new System.Drawing.Point(397, 97);
+            this.lblForPositionSize.Name = "lblForPositionSize";
+            this.lblForPositionSize.Size = new System.Drawing.Size(70, 13);
+            this.lblForPositionSize.TabIndex = 25;
+            this.lblForPositionSize.Text = "Position Size:";
+            // 
+            // lblPositionSize
+            // 
+            this.lblPositionSize.AutoSize = true;
+            this.lblPositionSize.Location = new System.Drawing.Point(501, 97);
+            this.lblPositionSize.Name = "lblPositionSize";
+            this.lblPositionSize.Size = new System.Drawing.Size(67, 13);
+            this.lblPositionSize.TabIndex = 26;
+            this.lblPositionSize.Text = "Position Size";
+            // 
+            // lblForNumberOfShares
+            // 
+            this.lblForNumberOfShares.AutoSize = true;
+            this.lblForNumberOfShares.Location = new System.Drawing.Point(397, 117);
+            this.lblForNumberOfShares.Name = "lblForNumberOfShares";
+            this.lblForNumberOfShares.Size = new System.Drawing.Size(95, 13);
+            this.lblForNumberOfShares.TabIndex = 27;
+            this.lblForNumberOfShares.Text = "Number of Shares:";
+            // 
+            // lblNumberOfShares
+            // 
+            this.lblNumberOfShares.AutoSize = true;
+            this.lblNumberOfShares.Location = new System.Drawing.Point(501, 117);
+            this.lblNumberOfShares.Name = "lblNumberOfShares";
+            this.lblNumberOfShares.Size = new System.Drawing.Size(92, 13);
+            this.lblNumberOfShares.TabIndex = 28;
+            this.lblNumberOfShares.Text = "Number of Shares";
             // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(707, 521);
-            this.Controls.Add(this.listBox1);
+            this.ClientSize = new System.Drawing.Size(707, 644);
+            this.Controls.Add(this.lblNumberOfShares);
+            this.Controls.Add(this.lblForNumberOfShares);
+            this.Controls.Add(this.lblPositionSize);
+            this.Controls.Add(this.lblForPositionSize);
+            this.Controls.Add(this.lblAccountValue);
+            this.Controls.Add(this.lblForAccountValue);
+            this.Controls.Add(this.lblAvailableFunds);
+            this.Controls.Add(this.lblForAvailableFunds);
+            this.Controls.Add(this.lblConnectionStatus);
+            this.Controls.Add(this.lstNotifications);
             this.Controls.Add(this.radioButton2);
             this.Controls.Add(this.radioButton1);
             this.Controls.Add(this.dataGridView1);
@@ -277,7 +388,7 @@
             this.Controls.Add(this.numericUpDown3);
             this.Controls.Add(this.numericUpDown2);
             this.Controls.Add(this.textBox2);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.txtAccountNumber);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
@@ -289,7 +400,7 @@
             this.Name = "frmMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "MODL";
-            this.Load += new System.EventHandler(this.Form1_Load);
+            this.Load += new System.EventHandler(this.frmMain_Load);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
@@ -306,7 +417,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox txtAccountNumber;
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.NumericUpDown numericUpDown2;
         private System.Windows.Forms.NumericUpDown numericUpDown3;
@@ -326,7 +437,16 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn RiskPercent;
         private System.Windows.Forms.DataGridViewTextBoxColumn DollarValue;
         private System.Windows.Forms.DataGridViewButtonColumn Delete;
-        private System.Windows.Forms.ListBox listBox1;
+        private System.Windows.Forms.ListBox lstNotifications;
+        private System.Windows.Forms.Label lblConnectionStatus;
+        private System.Windows.Forms.Label lblForAvailableFunds;
+        private System.Windows.Forms.Label lblAvailableFunds;
+        private System.Windows.Forms.Label lblForAccountValue;
+        private System.Windows.Forms.Label lblAccountValue;
+        private System.Windows.Forms.Label lblForPositionSize;
+        private System.Windows.Forms.Label lblPositionSize;
+        private System.Windows.Forms.Label lblForNumberOfShares;
+        private System.Windows.Forms.Label lblNumberOfShares;
     }
 }
 

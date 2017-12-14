@@ -7,9 +7,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using IBClient;
 
-namespace BabinGUI
+namespace GUI
 {
+    public delegate void MyDelegate(string availableFunds);
+
     public partial class frmMain : Form
     {
         public frmMain()
@@ -17,14 +20,42 @@ namespace BabinGUI
             InitializeComponent();
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private void frmMain_Load(object sender, EventArgs e)
         {
-
+            ConnectToIBClient();
         }
 
-        private void label1_Click(object sender, EventArgs e)
+        private void ConnectToIBClient()
         {
+            IBGatewayClientConnectionData iBGatewayClientConnectionData = new IBGatewayClientConnectionData("", 4002, 1001);
+            ClientManager clientManager = new ClientManager(iBGatewayClientConnectionData, this);
+            clientManager.Connect();
+        }
 
+        internal void SetAccountValue(string accountValue)
+        {
+            lblAccountValue.Invoke(new Action(() => lblAccountValue.Text = string.Format("{0:C}", accountValue)));
+        }
+
+        public void SetConnectionStatus(string connectionStatus)
+        {
+            lblConnectionStatus.Text = connectionStatus;
+        }
+
+        public string AccountNumber()
+        {
+            return txtAccountNumber.Text;
+        }
+
+        public void SetAvailableFunds(string availableFunds)
+        {
+            lblAvailableFunds.Invoke(new Action(() => lblAvailableFunds.Text = string.Format("{0:C}", availableFunds)));
+        }
+
+        public void SetNotifications(string notifications)
+        {
+            lstNotifications.Invoke(new Action(() => lstNotifications.Items.Add(notifications)));
+            lstNotifications.Visible = true;
         }
     }
 }

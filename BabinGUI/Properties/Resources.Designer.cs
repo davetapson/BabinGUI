@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace BabinGUI.Properties
+namespace GUI.Properties
 {
 
 
