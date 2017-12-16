@@ -41,7 +41,8 @@ namespace GUI
         public decimal? DollarValue { get; set; }
         public bool UseRiskPercent { get; set; }
         public decimal PriceOffSet { get; set; }
-        public int PositionSize { get; set; }
-        public double CurrentPrice { get; internal set; }
+        public int CurrentPositionSize { get; set; }
+        public decimal CurrentPrice { get; internal set; }
+        public string OrderStatus { get; set; } = "Pending"; // todo enum class
     }
 }

@@ -48,18 +48,14 @@
             this.lstNotifications = new System.Windows.Forms.ListBox();
             this.lblConnectionStatus = new System.Windows.Forms.Label();
             this.lblForAvailableFunds = new System.Windows.Forms.Label();
-            this.lblAvailableFunds = new System.Windows.Forms.Label();
             this.lblForAccountValue = new System.Windows.Forms.Label();
-            this.lblAccountValue = new System.Windows.Forms.Label();
-            this.lblForPositionSize = new System.Windows.Forms.Label();
-            this.lblPositionSize = new System.Windows.Forms.Label();
-            this.lblForNumberOfShares = new System.Windows.Forms.Label();
-            this.lblNumberOfShares = new System.Windows.Forms.Label();
             this.lblForPositionsValue = new System.Windows.Forms.Label();
             this.lblPositionsValue = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.cboOffSet = new System.Windows.Forms.ComboBox();
             this.btnConnect = new System.Windows.Forms.Button();
+            this.txtNetLiquidation = new System.Windows.Forms.TextBox();
+            this.txtAvailableFunds = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.numStopBuyLimit)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numStop)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numRiskPercent)).BeginInit();
@@ -261,79 +257,25 @@
             // lblForAvailableFunds
             // 
             this.lblForAvailableFunds.AutoSize = true;
-            this.lblForAvailableFunds.Location = new System.Drawing.Point(397, 47);
+            this.lblForAvailableFunds.Location = new System.Drawing.Point(664, 46);
             this.lblForAvailableFunds.Name = "lblForAvailableFunds";
             this.lblForAvailableFunds.Size = new System.Drawing.Size(85, 13);
             this.lblForAvailableFunds.TabIndex = 21;
             this.lblForAvailableFunds.Text = "Available Funds:";
             // 
-            // lblAvailableFunds
-            // 
-            this.lblAvailableFunds.AutoSize = true;
-            this.lblAvailableFunds.Location = new System.Drawing.Point(501, 47);
-            this.lblAvailableFunds.Name = "lblAvailableFunds";
-            this.lblAvailableFunds.Size = new System.Drawing.Size(82, 13);
-            this.lblAvailableFunds.TabIndex = 22;
-            this.lblAvailableFunds.Text = "Available Funds";
-            // 
             // lblForAccountValue
             // 
             this.lblForAccountValue.AutoSize = true;
-            this.lblForAccountValue.Location = new System.Drawing.Point(397, 91);
+            this.lblForAccountValue.Location = new System.Drawing.Point(664, 20);
             this.lblForAccountValue.Name = "lblForAccountValue";
             this.lblForAccountValue.Size = new System.Drawing.Size(111, 13);
             this.lblForAccountValue.TabIndex = 23;
             this.lblForAccountValue.Text = "Net Liquidation Value:";
             // 
-            // lblAccountValue
-            // 
-            this.lblAccountValue.AutoSize = true;
-            this.lblAccountValue.Location = new System.Drawing.Point(501, 91);
-            this.lblAccountValue.Name = "lblAccountValue";
-            this.lblAccountValue.Size = new System.Drawing.Size(77, 13);
-            this.lblAccountValue.TabIndex = 24;
-            this.lblAccountValue.Text = "Account Value";
-            // 
-            // lblForPositionSize
-            // 
-            this.lblForPositionSize.AutoSize = true;
-            this.lblForPositionSize.Location = new System.Drawing.Point(397, 120);
-            this.lblForPositionSize.Name = "lblForPositionSize";
-            this.lblForPositionSize.Size = new System.Drawing.Size(70, 13);
-            this.lblForPositionSize.TabIndex = 25;
-            this.lblForPositionSize.Text = "Position Size:";
-            // 
-            // lblPositionSize
-            // 
-            this.lblPositionSize.AutoSize = true;
-            this.lblPositionSize.Location = new System.Drawing.Point(501, 120);
-            this.lblPositionSize.Name = "lblPositionSize";
-            this.lblPositionSize.Size = new System.Drawing.Size(67, 13);
-            this.lblPositionSize.TabIndex = 26;
-            this.lblPositionSize.Text = "Position Size";
-            // 
-            // lblForNumberOfShares
-            // 
-            this.lblForNumberOfShares.AutoSize = true;
-            this.lblForNumberOfShares.Location = new System.Drawing.Point(397, 140);
-            this.lblForNumberOfShares.Name = "lblForNumberOfShares";
-            this.lblForNumberOfShares.Size = new System.Drawing.Size(95, 13);
-            this.lblForNumberOfShares.TabIndex = 27;
-            this.lblForNumberOfShares.Text = "Number of Shares:";
-            // 
-            // lblNumberOfShares
-            // 
-            this.lblNumberOfShares.AutoSize = true;
-            this.lblNumberOfShares.Location = new System.Drawing.Point(501, 140);
-            this.lblNumberOfShares.Name = "lblNumberOfShares";
-            this.lblNumberOfShares.Size = new System.Drawing.Size(92, 13);
-            this.lblNumberOfShares.TabIndex = 28;
-            this.lblNumberOfShares.Text = "Number of Shares";
-            // 
             // lblForPositionsValue
             // 
             this.lblForPositionsValue.AutoSize = true;
-            this.lblForPositionsValue.Location = new System.Drawing.Point(397, 68);
+            this.lblForPositionsValue.Location = new System.Drawing.Point(726, 120);
             this.lblForPositionsValue.Name = "lblForPositionsValue";
             this.lblForPositionsValue.Size = new System.Drawing.Size(64, 13);
             this.lblForPositionsValue.TabIndex = 29;
@@ -342,7 +284,7 @@
             // lblPositionsValue
             // 
             this.lblPositionsValue.AutoSize = true;
-            this.lblPositionsValue.Location = new System.Drawing.Point(501, 68);
+            this.lblPositionsValue.Location = new System.Drawing.Point(796, 120);
             this.lblPositionsValue.Name = "lblPositionsValue";
             this.lblPositionsValue.Size = new System.Drawing.Size(79, 13);
             this.lblPositionsValue.TabIndex = 30;
@@ -375,23 +317,39 @@
             this.btnConnect.UseVisualStyleBackColor = true;
             this.btnConnect.Click += new System.EventHandler(this.btnConnect_Click);
             // 
+            // txtNetLiquidation
+            // 
+            this.txtNetLiquidation.Enabled = false;
+            this.txtNetLiquidation.Location = new System.Drawing.Point(781, 17);
+            this.txtNetLiquidation.Name = "txtNetLiquidation";
+            this.txtNetLiquidation.Size = new System.Drawing.Size(125, 20);
+            this.txtNetLiquidation.TabIndex = 34;
+            this.txtNetLiquidation.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtNetLiquidation.TextChanged += new System.EventHandler(this.txtNetLiquidation_TextChanged);
+            // 
+            // txtAvailableFunds
+            // 
+            this.txtAvailableFunds.Enabled = false;
+            this.txtAvailableFunds.Location = new System.Drawing.Point(781, 43);
+            this.txtAvailableFunds.Name = "txtAvailableFunds";
+            this.txtAvailableFunds.Size = new System.Drawing.Size(125, 20);
+            this.txtAvailableFunds.TabIndex = 35;
+            this.txtAvailableFunds.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtAvailableFunds.TextChanged += new System.EventHandler(this.txtAvailableFunds_TextChanged);
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(976, 644);
+            this.Controls.Add(this.txtAvailableFunds);
+            this.Controls.Add(this.txtNetLiquidation);
             this.Controls.Add(this.btnConnect);
             this.Controls.Add(this.cboOffSet);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.lblPositionsValue);
             this.Controls.Add(this.lblForPositionsValue);
-            this.Controls.Add(this.lblNumberOfShares);
-            this.Controls.Add(this.lblForNumberOfShares);
-            this.Controls.Add(this.lblPositionSize);
-            this.Controls.Add(this.lblForPositionSize);
-            this.Controls.Add(this.lblAccountValue);
             this.Controls.Add(this.lblForAccountValue);
-            this.Controls.Add(this.lblAvailableFunds);
             this.Controls.Add(this.lblForAvailableFunds);
             this.Controls.Add(this.lblConnectionStatus);
             this.Controls.Add(this.lstNotifications);
@@ -451,18 +409,14 @@
         private System.Windows.Forms.ListBox lstNotifications;
         private System.Windows.Forms.Label lblConnectionStatus;
         private System.Windows.Forms.Label lblForAvailableFunds;
-        private System.Windows.Forms.Label lblAvailableFunds;
         private System.Windows.Forms.Label lblForAccountValue;
-        private System.Windows.Forms.Label lblAccountValue;
-        private System.Windows.Forms.Label lblForPositionSize;
-        private System.Windows.Forms.Label lblPositionSize;
-        private System.Windows.Forms.Label lblForNumberOfShares;
-        private System.Windows.Forms.Label lblNumberOfShares;
         private System.Windows.Forms.Label lblForPositionsValue;
         private System.Windows.Forms.Label lblPositionsValue;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.ComboBox cboOffSet;
         private System.Windows.Forms.Button btnConnect;
+        private System.Windows.Forms.TextBox txtNetLiquidation;
+        private System.Windows.Forms.TextBox txtAvailableFunds;
     }
 }
 

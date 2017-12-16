@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using IBClient;
 using IBApi;
 using BabinGUI.BL.eventArgs;
+using System.Globalization;
 
 namespace GUI
 {
@@ -19,6 +20,9 @@ namespace GUI
     {
         ClientManager clientManager;
         BindingList<BuyOrder> buyOrders = new BindingList<BuyOrder>();
+
+        decimal _netLiquidation = -1;
+        decimal _availableFunds = -1;
 
         public frmMain()
         {
@@ -104,7 +108,7 @@ namespace GUI
             if (eventArgs.TickPrice.Field == TickType.ASK)
             {
                 var buyOrder = buyOrders.FirstOrDefault(i => i.Id == eventArgs.TickPrice.TickerId);
-                buyOrder.CurrentPrice = eventArgs.TickPrice.Price;
+                buyOrder.CurrentPrice = (decimal)eventArgs.TickPrice.Price;
                 dgvBuyOrders.Invoke(new Action(() => dgvBuyOrders.Refresh()));
             }
             
@@ -155,9 +159,20 @@ namespace GUI
             clientManager.Connect();
         }
 
-        internal void SetAccountValue(string accountValue)
+        internal void UpdateNetLiquidation(string netLiquidation)
         {
-            lblAccountValue.Invoke(new Action(() => lblAccountValue.Text = string.Format("{0:C}", accountValue)));
+            bool result = decimal.TryParse(netLiquidation, NumberStyles.Any, CultureInfo.InvariantCulture, out _netLiquidation);
+
+            string value = FormatStringToCurrency(netLiquidation);
+            txtNetLiquidation.Invoke(new Action(() => txtNetLiquidation.Text = value));
+        }    
+
+        private string FormatStringToCurrency(string netLiquidation)
+        {
+            decimal value;
+            bool result = decimal.TryParse(netLiquidation, NumberStyles.Any, CultureInfo.InvariantCulture, out value);
+
+            return string.Format("{0:N2}", value);
         }
 
         internal void SetTotalCashValue(string accountValue)
@@ -165,11 +180,20 @@ namespace GUI
             lblPositionsValue.Invoke(new Action(() => lblPositionsValue.Text = string.Format("{0:C}", accountValue)));
         }
 
-        public void SetConnectionStatus(string connectionStatus)
+        public void SetConnectionStatus(bool connected)
         {
-            lblConnectionStatus.Text = connectionStatus;
-            btnConnect.Text = "Disconnect";
-            btnPlaceOrder.Enabled = true;
+            if (connected)
+            {
+                lblConnectionStatus.Text = "Connected";
+                btnConnect.Text = "Disconnect";
+                btnPlaceOrder.Enabled = true; 
+            }
+            else
+            {
+                lblConnectionStatus.Invoke(new Action(() => lblConnectionStatus.Text = "Not Connected"));
+                btnConnect.Invoke(new Action(() => btnConnect.Text = "Connect"));
+                btnPlaceOrder.Invoke(new Action(() => btnPlaceOrder.Enabled = false));
+            }
         }
 
         public string AccountNumber()
@@ -177,14 +201,22 @@ namespace GUI
             return txtAccountNumber.Text;
         }
 
-        public void SetAvailableFunds(string availableFunds)
+        public void UpdateAvailableFunds(string availableFunds)
         {
-            lblAvailableFunds.Invoke(new Action(() => lblAvailableFunds.Text = string.Format("{0:C}", availableFunds)));
+            bool result = decimal.TryParse(availableFunds, NumberStyles.Any, CultureInfo.InvariantCulture, out _availableFunds);
+
+            string value = FormatStringToCurrency(availableFunds);
+            txtAvailableFunds.Invoke(new Action(() => txtAvailableFunds.Text = value));
         }
 
-        public void SetNotifications(string notifications)
+        public void UpdateNotifications(ErrorArgs eventArgs)
         {
-            lstNotifications.Invoke(new Action(() => lstNotifications.Items.Insert(0, notifications)));
+            if (eventArgs.Error.Message == "Connection closed.")
+            {
+                eventArgs.Error.Message = eventArgs.Error.Message + " " + DateTime.Now;
+                SetConnectionStatus(false);
+            }
+            lstNotifications.Invoke(new Action(() => lstNotifications.Items.Insert(0, eventArgs.Error.Message)));
             lstNotifications.Invoke(new Action(() => updateNotifications()));
         }
 
@@ -250,6 +282,44 @@ namespace GUI
         private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
         {
             SaveFormState();
+        }
+
+        private void txtNetLiquidation_TextChanged(object sender, EventArgs e)
+        {
+            CalculatePositionSize();
+        }
+
+        private void CalculatePositionSize()
+        {
+            if (string.IsNullOrWhiteSpace(txtNetLiquidation.Text) || string.IsNullOrWhiteSpace(txtAvailableFunds.Text)) return;
+            if (_netLiquidation == -1 || _availableFunds == -1) return;
+
+            foreach(BuyOrder buyOrder in buyOrders)
+            {
+                if(buyOrder.CurrentPrice <= 0) { continue; }
+
+                if (buyOrder.UseRiskPercent)
+                {
+                    decimal positionValue = _netLiquidation * (decimal)buyOrder.RiskPercent / 100;
+                    decimal funds = _availableFunds < positionValue ? _availableFunds : positionValue;
+                    int positionSize = (int)Math.Floor(funds / buyOrder.CurrentPrice);
+
+                    buyOrder.CurrentPositionSize = positionSize;
+                } else
+                {
+                    decimal funds = _availableFunds < buyOrder.DollarValue ? _availableFunds : (decimal)buyOrder.DollarValue;
+                    int positionSize = (int)Math.Floor(funds / buyOrder.CurrentPrice);
+
+                    buyOrder.CurrentPositionSize = positionSize;
+                }
+            }
+
+            dgvBuyOrders.Refresh();
+        }
+
+        private void txtAvailableFunds_TextChanged(object sender, EventArgs e)
+        {
+            CalculatePositionSize();
         }
     }
 }

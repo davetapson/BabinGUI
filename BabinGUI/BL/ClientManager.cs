@@ -24,10 +24,10 @@ namespace IBClient
             switch (eventArgs.AccountValue.Key())
             {
                 case "AvailableFunds":
-                    frmMain.SetAvailableFunds(eventArgs.AccountValue.Value());
+                    frmMain.UpdateAvailableFunds(eventArgs.AccountValue.Value());
                     break;
                 case "NetLiquidation":
-                    frmMain.SetAccountValue(eventArgs.AccountValue.Value());
+                    frmMain.UpdateNetLiquidation(eventArgs.AccountValue.Value());
                     break;
                 case "TotalCashValue":
                     frmMain.SetTotalCashValue(eventArgs.AccountValue.Value());
@@ -44,7 +44,7 @@ namespace IBClient
 
         public void UpdateError(object sender, ErrorArgs eventArgs)
         {
-            frmMain.SetNotifications(eventArgs.Error.ToString());
+            frmMain.UpdateNotifications(eventArgs);
         }
             public ClientManager(IBGatewayClientConnectionData iBGatewayClientConnectionData, GUI.frmMain frmMain)
         {
@@ -86,7 +86,7 @@ namespace IBClient
                     if (DateTime.Now > connectionTime.AddSeconds(1)) { throw new Exception(strTimeOutMessage); }
                 }
 
-                frmMain.SetConnectionStatus("Connected");
+                frmMain.SetConnectionStatus(true);
 
                 SubscribeAccount(ibClient, frmMain.AccountNumber());
             }
