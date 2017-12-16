@@ -7,7 +7,7 @@ namespace BabinGUI.BL.eventArgs
     {
         public AccountValueArgs(AccountValue accountValue)
         {
-            this.AccountValue = accountValue;
+            AccountValue = accountValue;
         }
 
         public AccountValue AccountValue { get; }

@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using IBClient;
+using IBApi;
+using BabinGUI.BL.eventArgs;
 
 namespace GUI
 {
@@ -15,7 +17,8 @@ namespace GUI
 
     public partial class frmMain : Form
     {
-        ClientManager clientManager; 
+        ClientManager clientManager;
+        BindingList<BuyOrder> buyOrders = new BindingList<BuyOrder>();
 
         public frmMain()
         {
@@ -26,22 +29,123 @@ namespace GUI
         private void InitializeControls()
         {
             InitializeOffsetsComboBox();
+            InitializeGrid();
+            InitializeNumberUpDowns();
+        }
+
+        private void InitializeNumberUpDowns()
+        {
+            numRiskPercent.Value = BabinGUI.Properties.Settings.Default.RiskPercent;
+        }
+
+        private void InitializeGrid()
+        {
+            BuyOrder buyOrder = new BuyOrder(1, "AA", 10.00m, 10.01m, 2.0m, 0, true, 0.1m);
+            buyOrders.Add(buyOrder);
+            buyOrder = new BuyOrder(2, "BB", 11.00m, 11.01m, 0, 2.5m, false, 0.5m);
+            buyOrders.Add(buyOrder);
+            dgvBuyOrders.DataSource = buyOrders;
+            
+
+            //Id
+            dgvBuyOrders.Columns[0].Width = BabinGUI.Properties.Settings.Default.Col0Width;
+            dgvBuyOrders.Columns[0].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+
+            // Ticker
+            dgvBuyOrders.Columns[1].Width = BabinGUI.Properties.Settings.Default.Col1Width;
+            
+            // Stop
+            dgvBuyOrders.Columns[2].Width = BabinGUI.Properties.Settings.Default.Col2Width;
+            dgvBuyOrders.Columns[2].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+
+            // StopBuyLimit
+            dgvBuyOrders.Columns[3].Width = BabinGUI.Properties.Settings.Default.Col3Width;
+            dgvBuyOrders.Columns[3].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+
+            //Risk Percent
+            dgvBuyOrders.Columns[4].Width = BabinGUI.Properties.Settings.Default.Col4Width;
+            dgvBuyOrders.Columns[4].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+
+            //Dollar Value
+            dgvBuyOrders.Columns[5].Width = BabinGUI.Properties.Settings.Default.Col5Width;
+            dgvBuyOrders.Columns[5].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+
+            // Use Risk Percent
+            dgvBuyOrders.Columns[6].Width = BabinGUI.Properties.Settings.Default.Col6Width; ;
+            dgvBuyOrders.Columns[6].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+
+            // Price OffSet
+            dgvBuyOrders.Columns[7].Width = BabinGUI.Properties.Settings.Default.Col7Width; ;
+            dgvBuyOrders.Columns[7].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+
+            // Delete
+            DataGridViewButtonColumn deleteButtonColumn = new DataGridViewButtonColumn();
+            deleteButtonColumn.Name = "Delete";
+            deleteButtonColumn.Text = "Delete";
+            deleteButtonColumn.UseColumnTextForButtonValue = true;
+            deleteButtonColumn.Width = BabinGUI.Properties.Settings.Default.Col8Width;
+            deleteButtonColumn.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+
+            foreach(DataGridViewColumn column in dgvBuyOrders.Columns)
+            {
+                column.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            }
+
+            int columnIndex = dgvBuyOrders.ColumnCount;
+            if (dgvBuyOrders.Columns["Delete"] == null)
+            {
+                dgvBuyOrders.Columns.Insert(columnIndex, deleteButtonColumn);
+            }
+            dgvBuyOrders.CellClick += dgvBuyOrders_CellClick;
+        }
+
+        internal void UpdateTickPrice(TickPriceArgs eventArgs)
+        {
+            if (eventArgs.TickPrice.Field == TickType.ASK)
+            {
+                var buyOrder = buyOrders.FirstOrDefault(i => i.Id == eventArgs.TickPrice.TickerId);
+                buyOrder.CurrentPrice = eventArgs.TickPrice.Price;
+                dgvBuyOrders.Invoke(new Action(() => dgvBuyOrders.Refresh()));
+            }
+            
+        }
+
+        private void dgvBuyOrders_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.ColumnIndex == dgvBuyOrders.Columns["Delete"].Index)
+            {
+                buyOrders.RemoveAt(e.RowIndex);
+            }
         }
 
         private void InitializeOffsetsComboBox()
         {
             string offSetString = BabinGUI.Properties.Settings.Default.PriceOffset;
-            string[] offSets = offSetString.Split(',');
+            string[] offSets = offSetString.Split('^');
             foreach (string offSet in offSets)
             {
-                cboOffSets.Items.Add(offSet);
+                cboOffSet.Items.Add(Convert.ToDecimal(offSet));
             }
-            if (cboOffSets.Items.Count > 0) cboOffSets.SelectedIndex = 0;
+            if (cboOffSet.Items.Count > 0) cboOffSet.SelectedIndex = 0;
         }
 
         private void frmMain_Load(object sender, EventArgs e)
         {
             
+        }
+
+        private void SaveFormState()
+        {
+            BabinGUI.Properties.Settings.Default.Col0Width = dgvBuyOrders.Columns[1].Width;
+            BabinGUI.Properties.Settings.Default.Col1Width = dgvBuyOrders.Columns[2].Width;
+            BabinGUI.Properties.Settings.Default.Col2Width = dgvBuyOrders.Columns[3].Width;
+            BabinGUI.Properties.Settings.Default.Col3Width = dgvBuyOrders.Columns[4].Width;
+            BabinGUI.Properties.Settings.Default.Col4Width = dgvBuyOrders.Columns[5].Width;
+            BabinGUI.Properties.Settings.Default.Col5Width = dgvBuyOrders.Columns[6].Width;
+            BabinGUI.Properties.Settings.Default.Col6Width = dgvBuyOrders.Columns[7].Width;
+            BabinGUI.Properties.Settings.Default.Col7Width = dgvBuyOrders.Columns[8].Width;
+            BabinGUI.Properties.Settings.Default.Col8Width = dgvBuyOrders.Columns[0].Width;
+            BabinGUI.Properties.Settings.Default.Save();
         }
 
         private void ConnectToIBClient()
@@ -65,6 +169,7 @@ namespace GUI
         {
             lblConnectionStatus.Text = connectionStatus;
             btnConnect.Text = "Disconnect";
+            btnPlaceOrder.Enabled = true;
         }
 
         public string AccountNumber()
@@ -99,6 +204,7 @@ namespace GUI
                 clientManager.Disconnect();
                 btnConnect.Text = "Connect";
                 lblConnectionStatus.Text = "Disconnected"; // todo - parameterise
+                btnPlaceOrder.Enabled = false;
             }
             
         }
@@ -106,6 +212,44 @@ namespace GUI
         internal void AddNotification(string notification)
         {
             lstNotifications.Items.Insert(0, notification);
+        }
+
+        private void btnPlaceOrder_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                // create buy order
+                BuyOrder buyOrder = new BuyOrder(GetNextId(), txtTicker.Text, numStop.Value, numStopBuyLimit.Value, numRiskPercent.Value, numDollarValue.Value, rdoUseRiskPercent.Checked, Convert.ToDecimal(cboOffSet.Text));
+                buyOrders.Add(buyOrder);
+
+                SubscribeTicker(buyOrder);
+            }
+            catch (ArgumentNullException ae)
+            {
+                MessageBox.Show(ae.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void SubscribeTicker(BuyOrder buyOrder)
+        {
+            Contract contract = new Contract();
+            contract.Symbol = txtTicker.Text;
+            contract.SecType = "STK";
+            contract.Exchange = "SMART";
+            if (txtTicker.Text == "MSFT") contract.PrimaryExch = "NASDAQ"; // todo paramaterise
+            contract.Currency = "USD";
+
+            clientManager.RequestMarketData(contract, buyOrder);
+        }
+
+        private int GetNextId()
+        {
+            return buyOrders.OrderByDescending(x => x.Id).FirstOrDefault() == null ? 1 : buyOrders.OrderByDescending(x => x.Id).FirstOrDefault().Id + 1;
+        }
+
+        private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            SaveFormState();
         }
     }
 }

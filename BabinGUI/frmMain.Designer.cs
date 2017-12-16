@@ -34,24 +34,16 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.txtAccountNumber = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.numericUpDown2 = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDown3 = new System.Windows.Forms.NumericUpDown();
+            this.txtTicker = new System.Windows.Forms.TextBox();
+            this.numStopBuyLimit = new System.Windows.Forms.NumericUpDown();
+            this.numStop = new System.Windows.Forms.NumericUpDown();
             this.label5 = new System.Windows.Forms.Label();
-            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
+            this.numRiskPercent = new System.Windows.Forms.NumericUpDown();
             this.label6 = new System.Windows.Forms.Label();
-            this.numericUpDown4 = new System.Windows.Forms.NumericUpDown();
-            this.button1 = new System.Windows.Forms.Button();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.Id = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Account = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Ticker = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Stop = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.StopBuyLimit = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.RiskPercent = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.DollarValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Delete = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.radioButton1 = new System.Windows.Forms.RadioButton();
+            this.numDollarValue = new System.Windows.Forms.NumericUpDown();
+            this.btnPlaceOrder = new System.Windows.Forms.Button();
+            this.dgvBuyOrders = new System.Windows.Forms.DataGridView();
+            this.rdoUseRiskPercent = new System.Windows.Forms.RadioButton();
             this.radioButton2 = new System.Windows.Forms.RadioButton();
             this.lstNotifications = new System.Windows.Forms.ListBox();
             this.lblConnectionStatus = new System.Windows.Forms.Label();
@@ -66,13 +58,13 @@
             this.lblForPositionsValue = new System.Windows.Forms.Label();
             this.lblPositionsValue = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
-            this.cboOffSets = new System.Windows.Forms.ComboBox();
+            this.cboOffSet = new System.Windows.Forms.ComboBox();
             this.btnConnect = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown4)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numStopBuyLimit)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numStop)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numRiskPercent)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numDollarValue)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvBuyOrders)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -120,26 +112,40 @@
             this.txtAccountNumber.TabIndex = 4;
             this.txtAccountNumber.Text = "DU271448";
             // 
-            // textBox2
+            // txtTicker
             // 
-            this.textBox2.Location = new System.Drawing.Point(168, 44);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(120, 20);
-            this.textBox2.TabIndex = 0;
+            this.txtTicker.Location = new System.Drawing.Point(168, 44);
+            this.txtTicker.Name = "txtTicker";
+            this.txtTicker.Size = new System.Drawing.Size(120, 20);
+            this.txtTicker.TabIndex = 0;
             // 
-            // numericUpDown2
+            // numStopBuyLimit
             // 
-            this.numericUpDown2.Location = new System.Drawing.Point(168, 91);
-            this.numericUpDown2.Name = "numericUpDown2";
-            this.numericUpDown2.Size = new System.Drawing.Size(120, 20);
-            this.numericUpDown2.TabIndex = 2;
+            this.numStopBuyLimit.DecimalPlaces = 2;
+            this.numStopBuyLimit.Location = new System.Drawing.Point(168, 91);
+            this.numStopBuyLimit.Maximum = new decimal(new int[] {
+            1410065408,
+            2,
+            0,
+            0});
+            this.numStopBuyLimit.Name = "numStopBuyLimit";
+            this.numStopBuyLimit.Size = new System.Drawing.Size(120, 20);
+            this.numStopBuyLimit.TabIndex = 2;
+            this.numStopBuyLimit.ThousandsSeparator = true;
             // 
-            // numericUpDown3
+            // numStop
             // 
-            this.numericUpDown3.Location = new System.Drawing.Point(168, 68);
-            this.numericUpDown3.Name = "numericUpDown3";
-            this.numericUpDown3.Size = new System.Drawing.Size(120, 20);
-            this.numericUpDown3.TabIndex = 1;
+            this.numStop.DecimalPlaces = 2;
+            this.numStop.Location = new System.Drawing.Point(168, 68);
+            this.numStop.Maximum = new decimal(new int[] {
+            1410065408,
+            2,
+            0,
+            0});
+            this.numStop.Name = "numStop";
+            this.numStop.Size = new System.Drawing.Size(120, 20);
+            this.numStop.TabIndex = 1;
+            this.numStop.ThousandsSeparator = true;
             // 
             // label5
             // 
@@ -150,12 +156,19 @@
             this.label5.TabIndex = 11;
             this.label5.Text = "Risk Percent:";
             // 
-            // numericUpDown1
+            // numRiskPercent
             // 
-            this.numericUpDown1.Location = new System.Drawing.Point(168, 136);
-            this.numericUpDown1.Name = "numericUpDown1";
-            this.numericUpDown1.Size = new System.Drawing.Size(120, 20);
-            this.numericUpDown1.TabIndex = 3;
+            this.numRiskPercent.DecimalPlaces = 2;
+            this.numRiskPercent.Location = new System.Drawing.Point(168, 136);
+            this.numRiskPercent.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+            this.numRiskPercent.Name = "numRiskPercent";
+            this.numRiskPercent.Size = new System.Drawing.Size(120, 20);
+            this.numRiskPercent.TabIndex = 3;
+            this.numRiskPercent.ThousandsSeparator = true;
             // 
             // label6
             // 
@@ -166,106 +179,56 @@
             this.label6.TabIndex = 13;
             this.label6.Text = "$ Value:";
             // 
-            // numericUpDown4
+            // numDollarValue
             // 
-            this.numericUpDown4.Location = new System.Drawing.Point(168, 160);
-            this.numericUpDown4.Name = "numericUpDown4";
-            this.numericUpDown4.Size = new System.Drawing.Size(120, 20);
-            this.numericUpDown4.TabIndex = 5;
+            this.numDollarValue.DecimalPlaces = 2;
+            this.numDollarValue.Location = new System.Drawing.Point(168, 160);
+            this.numDollarValue.Maximum = new decimal(new int[] {
+            1410065408,
+            2,
+            0,
+            0});
+            this.numDollarValue.Name = "numDollarValue";
+            this.numDollarValue.Size = new System.Drawing.Size(120, 20);
+            this.numDollarValue.TabIndex = 5;
+            this.numDollarValue.ThousandsSeparator = true;
             // 
-            // button1
+            // btnPlaceOrder
             // 
-            this.button1.Location = new System.Drawing.Point(213, 194);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 7;
-            this.button1.Text = "Place Order";
-            this.button1.UseVisualStyleBackColor = true;
+            this.btnPlaceOrder.Enabled = false;
+            this.btnPlaceOrder.Location = new System.Drawing.Point(213, 194);
+            this.btnPlaceOrder.Name = "btnPlaceOrder";
+            this.btnPlaceOrder.Size = new System.Drawing.Size(75, 23);
+            this.btnPlaceOrder.TabIndex = 7;
+            this.btnPlaceOrder.Text = "Place Order";
+            this.btnPlaceOrder.UseVisualStyleBackColor = true;
+            this.btnPlaceOrder.Click += new System.EventHandler(this.btnPlaceOrder_Click);
             // 
-            // dataGridView1
+            // dgvBuyOrders
             // 
-            this.dataGridView1.AllowUserToAddRows = false;
-            this.dataGridView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.dgvBuyOrders.AllowUserToAddRows = false;
+            this.dgvBuyOrders.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.Id,
-            this.Account,
-            this.Ticker,
-            this.Stop,
-            this.StopBuyLimit,
-            this.RiskPercent,
-            this.DollarValue,
-            this.Delete});
-            this.dataGridView1.Location = new System.Drawing.Point(12, 225);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.ReadOnly = true;
-            this.dataGridView1.RowHeadersVisible = false;
-            this.dataGridView1.Size = new System.Drawing.Size(683, 319);
-            this.dataGridView1.TabIndex = 0;
-            this.dataGridView1.TabStop = false;
+            this.dgvBuyOrders.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvBuyOrders.Location = new System.Drawing.Point(12, 225);
+            this.dgvBuyOrders.Name = "dgvBuyOrders";
+            this.dgvBuyOrders.ReadOnly = true;
+            this.dgvBuyOrders.RowHeadersVisible = false;
+            this.dgvBuyOrders.Size = new System.Drawing.Size(952, 319);
+            this.dgvBuyOrders.TabIndex = 0;
+            this.dgvBuyOrders.TabStop = false;
             // 
-            // Id
+            // rdoUseRiskPercent
             // 
-            this.Id.HeaderText = "Id";
-            this.Id.Name = "Id";
-            this.Id.ReadOnly = true;
-            this.Id.Width = 30;
-            // 
-            // Account
-            // 
-            this.Account.HeaderText = "Account";
-            this.Account.Name = "Account";
-            this.Account.ReadOnly = true;
-            // 
-            // Ticker
-            // 
-            this.Ticker.HeaderText = "Ticker";
-            this.Ticker.Name = "Ticker";
-            this.Ticker.ReadOnly = true;
-            // 
-            // Stop
-            // 
-            this.Stop.HeaderText = "Stop";
-            this.Stop.Name = "Stop";
-            this.Stop.ReadOnly = true;
-            // 
-            // StopBuyLimit
-            // 
-            this.StopBuyLimit.HeaderText = "Stop Buy Limit";
-            this.StopBuyLimit.Name = "StopBuyLimit";
-            this.StopBuyLimit.ReadOnly = true;
-            // 
-            // RiskPercent
-            // 
-            this.RiskPercent.HeaderText = "Risk ";
-            this.RiskPercent.Name = "RiskPercent";
-            this.RiskPercent.ReadOnly = true;
-            // 
-            // DollarValue
-            // 
-            this.DollarValue.HeaderText = "$ Value";
-            this.DollarValue.Name = "DollarValue";
-            this.DollarValue.ReadOnly = true;
-            // 
-            // Delete
-            // 
-            this.Delete.HeaderText = "Delete";
-            this.Delete.Name = "Delete";
-            this.Delete.ReadOnly = true;
-            this.Delete.Width = 50;
-            // 
-            // radioButton1
-            // 
-            this.radioButton1.AutoSize = true;
-            this.radioButton1.Checked = true;
-            this.radioButton1.Location = new System.Drawing.Point(297, 140);
-            this.radioButton1.Name = "radioButton1";
-            this.radioButton1.Size = new System.Drawing.Size(14, 13);
-            this.radioButton1.TabIndex = 4;
-            this.radioButton1.TabStop = true;
-            this.radioButton1.UseVisualStyleBackColor = true;
+            this.rdoUseRiskPercent.AutoSize = true;
+            this.rdoUseRiskPercent.Checked = true;
+            this.rdoUseRiskPercent.Location = new System.Drawing.Point(297, 140);
+            this.rdoUseRiskPercent.Name = "rdoUseRiskPercent";
+            this.rdoUseRiskPercent.Size = new System.Drawing.Size(14, 13);
+            this.rdoUseRiskPercent.TabIndex = 4;
+            this.rdoUseRiskPercent.TabStop = true;
+            this.rdoUseRiskPercent.UseVisualStyleBackColor = true;
             // 
             // radioButton2
             // 
@@ -394,13 +357,13 @@
             this.label7.TabIndex = 31;
             this.label7.Text = "Price Offset:";
             // 
-            // cboOffSets
+            // cboOffSet
             // 
-            this.cboOffSets.FormattingEnabled = true;
-            this.cboOffSets.Location = new System.Drawing.Point(504, 175);
-            this.cboOffSets.Name = "cboOffSets";
-            this.cboOffSets.Size = new System.Drawing.Size(40, 21);
-            this.cboOffSets.TabIndex = 32;
+            this.cboOffSet.FormattingEnabled = true;
+            this.cboOffSet.Location = new System.Drawing.Point(504, 175);
+            this.cboOffSet.Name = "cboOffSet";
+            this.cboOffSet.Size = new System.Drawing.Size(40, 21);
+            this.cboOffSet.TabIndex = 32;
             // 
             // btnConnect
             // 
@@ -416,9 +379,9 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(707, 644);
+            this.ClientSize = new System.Drawing.Size(976, 644);
             this.Controls.Add(this.btnConnect);
-            this.Controls.Add(this.cboOffSets);
+            this.Controls.Add(this.cboOffSet);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.lblPositionsValue);
             this.Controls.Add(this.lblForPositionsValue);
@@ -433,16 +396,16 @@
             this.Controls.Add(this.lblConnectionStatus);
             this.Controls.Add(this.lstNotifications);
             this.Controls.Add(this.radioButton2);
-            this.Controls.Add(this.radioButton1);
-            this.Controls.Add(this.dataGridView1);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.numericUpDown4);
+            this.Controls.Add(this.rdoUseRiskPercent);
+            this.Controls.Add(this.dgvBuyOrders);
+            this.Controls.Add(this.btnPlaceOrder);
+            this.Controls.Add(this.numDollarValue);
             this.Controls.Add(this.label6);
-            this.Controls.Add(this.numericUpDown1);
+            this.Controls.Add(this.numRiskPercent);
             this.Controls.Add(this.label5);
-            this.Controls.Add(this.numericUpDown3);
-            this.Controls.Add(this.numericUpDown2);
-            this.Controls.Add(this.textBox2);
+            this.Controls.Add(this.numStop);
+            this.Controls.Add(this.numStopBuyLimit);
+            this.Controls.Add(this.txtTicker);
             this.Controls.Add(this.txtAccountNumber);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
@@ -455,12 +418,13 @@
             this.Name = "frmMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "MODL";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMain_FormClosing);
             this.Load += new System.EventHandler(this.frmMain_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown4)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numStopBuyLimit)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numStop)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numRiskPercent)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numDollarValue)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvBuyOrders)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -473,25 +437,17 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox txtAccountNumber;
-        private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.NumericUpDown numericUpDown2;
-        private System.Windows.Forms.NumericUpDown numericUpDown3;
+        private System.Windows.Forms.TextBox txtTicker;
+        private System.Windows.Forms.NumericUpDown numStopBuyLimit;
+        private System.Windows.Forms.NumericUpDown numStop;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.NumericUpDown numericUpDown1;
+        private System.Windows.Forms.NumericUpDown numRiskPercent;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.NumericUpDown numericUpDown4;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.DataGridView dataGridView1;
-        private System.Windows.Forms.RadioButton radioButton1;
+        private System.Windows.Forms.NumericUpDown numDollarValue;
+        private System.Windows.Forms.Button btnPlaceOrder;
+        private System.Windows.Forms.DataGridView dgvBuyOrders;
+        private System.Windows.Forms.RadioButton rdoUseRiskPercent;
         private System.Windows.Forms.RadioButton radioButton2;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Id;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Account;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Ticker;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Stop;
-        private System.Windows.Forms.DataGridViewTextBoxColumn StopBuyLimit;
-        private System.Windows.Forms.DataGridViewTextBoxColumn RiskPercent;
-        private System.Windows.Forms.DataGridViewTextBoxColumn DollarValue;
-        private System.Windows.Forms.DataGridViewButtonColumn Delete;
         private System.Windows.Forms.ListBox lstNotifications;
         private System.Windows.Forms.Label lblConnectionStatus;
         private System.Windows.Forms.Label lblForAvailableFunds;
@@ -505,7 +461,7 @@
         private System.Windows.Forms.Label lblForPositionsValue;
         private System.Windows.Forms.Label lblPositionsValue;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.ComboBox cboOffSets;
+        private System.Windows.Forms.ComboBox cboOffSet;
         private System.Windows.Forms.Button btnConnect;
     }
 }

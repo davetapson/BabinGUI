@@ -83,7 +83,11 @@ namespace IBClient
         //! [error]
         public virtual void connectionClosed()
         {
-            Console.WriteLine("Connection closed.\n");
+            string message = "Connection closed.";
+            logger.Info(message);
+
+            Error error = new Error(0, 0, message); // lazy ass way of doing notifications todo
+            RaiseErrorUpdatedEvent(new ErrorArgs(error));
         }
         
         public virtual void currentTime(long time) 
@@ -91,14 +95,23 @@ namespace IBClient
             Console.WriteLine("Current Time: "+time+"\n");
         }
 
-        //! [tickprice]
+        // Tick Price
+        public event EventHandler<TickPriceArgs> TickPriceUpdated;
         public virtual void tickPrice(int tickerId, int field, double price, TickAttrib attribs) 
         {
             Console.WriteLine("Tick Price. Ticker Id:"+tickerId+", Field: "+field+", Price: "+price+", CanAutoExecute: "+attribs.CanAutoExecute + 
                 ", PastLimit: " + attribs.PastLimit + ", PreOpen: " + attribs.PreOpen);
+
+            TickPrice tickPrice = new TickPrice(tickerId, field, price, attribs);
+            RaiseTickPriceUpdatedEvent(new TickPriceArgs(tickPrice));
         }
+        public virtual void RaiseTickPriceUpdatedEvent(TickPriceArgs eventArgs)
+        {
+            TickPriceUpdated?.Invoke(this, eventArgs);
+        }
+
         //! [tickprice]
-        
+
         //! [ticksize]
         public virtual void tickSize(int tickerId, int field, int size)
         {

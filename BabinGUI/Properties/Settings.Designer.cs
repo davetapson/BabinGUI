@@ -25,10 +25,130 @@ namespace BabinGUI.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0.1,0.2")]
+        [global::System.Configuration.DefaultSettingValueAttribute("0,1^0,2")]
         public string PriceOffset {
             get {
                 return ((string)(this["PriceOffset"]));
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("25")]
+        public int Col0Width {
+            get {
+                return ((int)(this["Col0Width"]));
+            }
+            set {
+                this["Col0Width"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("75")]
+        public int Col1Width {
+            get {
+                return ((int)(this["Col1Width"]));
+            }
+            set {
+                this["Col1Width"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("75")]
+        public int Col2Width {
+            get {
+                return ((int)(this["Col2Width"]));
+            }
+            set {
+                this["Col2Width"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("75")]
+        public int Col3Width {
+            get {
+                return ((int)(this["Col3Width"]));
+            }
+            set {
+                this["Col3Width"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("75")]
+        public int Col4Width {
+            get {
+                return ((int)(this["Col4Width"]));
+            }
+            set {
+                this["Col4Width"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("75")]
+        public int Col5Width {
+            get {
+                return ((int)(this["Col5Width"]));
+            }
+            set {
+                this["Col5Width"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("75")]
+        public int Col6Width {
+            get {
+                return ((int)(this["Col6Width"]));
+            }
+            set {
+                this["Col6Width"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("75")]
+        public int Col7Width {
+            get {
+                return ((int)(this["Col7Width"]));
+            }
+            set {
+                this["Col7Width"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("60")]
+        public int Col8Width {
+            get {
+                return ((int)(this["Col8Width"]));
+            }
+            set {
+                this["Col8Width"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2")]
+        public decimal RiskPercent {
+            get {
+                return ((decimal)(this["RiskPercent"]));
+            }
+            set {
+                this["RiskPercent"] = value;
             }
         }
     }

@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using GUI;
 
 namespace IBClient
 {
@@ -36,6 +37,11 @@ namespace IBClient
             }
         }
 
+        public void UpdateTickPrice(object sender, TickPriceArgs eventArgs)
+        {
+            frmMain.UpdateTickPrice(eventArgs);
+        }
+
         public void UpdateError(object sender, ErrorArgs eventArgs)
         {
             frmMain.SetNotifications(eventArgs.Error.ToString());
@@ -54,6 +60,7 @@ namespace IBClient
 
                 // subscribe to events triggered by wrapper, to update form
                 ibClient.AccountValueUpdated += UpdateAccountValue;
+                ibClient.TickPriceUpdated += UpdateTickPrice;
                 ibClient.ErrorUpdated += UpdateError;
 
                 ibClient.ClientSocket.eConnect(iBGatewayClientConnectionData.Server,
@@ -104,5 +111,16 @@ namespace IBClient
             ibClient.ClientSocket.reqAccountUpdates(true, accountNumber);
         }
 
+        internal void RequestMarketData(Contract contract, BuyOrder buyOrder)
+        {
+            logger.Info("Requesting Market Data: " + contract.ToString() + buyOrder.ToString());
+            ibClient.ClientSocket.reqMktData(buyOrder.Id, contract, "", false, false, null);
+        }
+
+        internal void CancelMarketData(int buyOrderId)
+        {
+            ibClient.ClientSocket.cancelMktData(buyOrderId);
+            
+        }
     }
 }
