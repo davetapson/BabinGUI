@@ -15,20 +15,39 @@ namespace GUI
 
     public partial class frmMain : Form
     {
+        ClientManager clientManager; 
+
         public frmMain()
         {
             InitializeComponent();
+            InitializeControls(); ;
+        }
+
+        private void InitializeControls()
+        {
+            InitializeOffsetsComboBox();
+        }
+
+        private void InitializeOffsetsComboBox()
+        {
+            string offSetString = BabinGUI.Properties.Settings.Default.PriceOffset;
+            string[] offSets = offSetString.Split(',');
+            foreach (string offSet in offSets)
+            {
+                cboOffSets.Items.Add(offSet);
+            }
+            if (cboOffSets.Items.Count > 0) cboOffSets.SelectedIndex = 0;
         }
 
         private void frmMain_Load(object sender, EventArgs e)
         {
-            ConnectToIBClient();
+            
         }
 
         private void ConnectToIBClient()
         {
             IBGatewayClientConnectionData iBGatewayClientConnectionData = new IBGatewayClientConnectionData("", 4002, 1001);
-            ClientManager clientManager = new ClientManager(iBGatewayClientConnectionData, this);
+            clientManager = new ClientManager(iBGatewayClientConnectionData, this);
             clientManager.Connect();
         }
 
@@ -37,9 +56,15 @@ namespace GUI
             lblAccountValue.Invoke(new Action(() => lblAccountValue.Text = string.Format("{0:C}", accountValue)));
         }
 
+        internal void SetTotalCashValue(string accountValue)
+        {
+            lblPositionsValue.Invoke(new Action(() => lblPositionsValue.Text = string.Format("{0:C}", accountValue)));
+        }
+
         public void SetConnectionStatus(string connectionStatus)
         {
             lblConnectionStatus.Text = connectionStatus;
+            btnConnect.Text = "Disconnect";
         }
 
         public string AccountNumber()
@@ -54,8 +79,33 @@ namespace GUI
 
         public void SetNotifications(string notifications)
         {
-            lstNotifications.Invoke(new Action(() => lstNotifications.Items.Add(notifications)));
-            lstNotifications.Visible = true;
+            lstNotifications.Invoke(new Action(() => lstNotifications.Items.Insert(0, notifications)));
+            lstNotifications.Invoke(new Action(() => updateNotifications()));
+        }
+
+        private void updateNotifications()
+        {
+            lstNotifications.Items[0] = lstNotifications.Items[0];
+        }
+
+        private void btnConnect_Click(object sender, EventArgs e)
+        {
+            if(btnConnect.Text == "Connect")
+            {
+                ConnectToIBClient();
+            } 
+            else
+            {
+                clientManager.Disconnect();
+                btnConnect.Text = "Connect";
+                lblConnectionStatus.Text = "Disconnected"; // todo - parameterise
+            }
+            
+        }
+
+        internal void AddNotification(string notification)
+        {
+            lstNotifications.Items.Insert(0, notification);
         }
     }
 }

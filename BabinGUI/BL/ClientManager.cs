@@ -17,6 +17,7 @@ namespace IBClient
         EWrapperImpl ibClient;
         private IBGatewayClientConnectionData iBGatewayClientConnectionData;
         private GUI.frmMain frmMain;
+        string strTimeOutMessage = "Connecton Timeout";
 
         public void UpdateAccountValue(object sender, AccountValueArgs eventArgs) {
             switch (eventArgs.AccountValue.Key())
@@ -26,6 +27,9 @@ namespace IBClient
                     break;
                 case "NetLiquidation":
                     frmMain.SetAccountValue(eventArgs.AccountValue.Value());
+                    break;
+                case "TotalCashValue":
+                    frmMain.SetTotalCashValue(eventArgs.AccountValue.Value());
                     break;
                 default:
                     break;
@@ -44,33 +48,55 @@ namespace IBClient
 
         public void Connect()
         {
-            ibClient = new EWrapperImpl();
-            
-            // subscribe to events triggered by wrapper, to update form
-            ibClient.AccountValueUpdated += UpdateAccountValue;
-            ibClient.ErrorUpdated += UpdateError;
+            try
+            {
+                ibClient = new EWrapperImpl();
 
-            ibClient.ClientSocket.eConnect( iBGatewayClientConnectionData.Server,
-                                                iBGatewayClientConnectionData.Port,
-                                                iBGatewayClientConnectionData.ClientId);
+                // subscribe to events triggered by wrapper, to update form
+                ibClient.AccountValueUpdated += UpdateAccountValue;
+                ibClient.ErrorUpdated += UpdateError;
 
-            var reader = new EReader(ibClient.ClientSocket, ibClient.Signal);
-            reader.Start();
-            new Thread(() => {
-                while (ibClient.ClientSocket.IsConnected())
+                ibClient.ClientSocket.eConnect(iBGatewayClientConnectionData.Server,
+                                                    iBGatewayClientConnectionData.Port,
+                                                    iBGatewayClientConnectionData.ClientId);
+
+                var reader = new EReader(ibClient.ClientSocket, ibClient.Signal);
+                reader.Start();
+                new Thread(() =>
                 {
-                    ibClient.Signal.waitForSignal();
-                    reader.processMsgs();
+                    while (ibClient.ClientSocket.IsConnected())
+                    {
+                        ibClient.Signal.waitForSignal();
+                        reader.processMsgs();
+                    }
+                })
+                { IsBackground = true }.Start();
+
+                // Pause here until the connection is complete
+                DateTime connectionTime = DateTime.Now;
+                while (ibClient.NextOrderId <= 0)
+                {
+                    if (DateTime.Now > connectionTime.AddSeconds(1)) { throw new Exception(strTimeOutMessage); }
                 }
-            })
-            { IsBackground = true }.Start();
 
-            // Pause here until the connection is complete 
-            while (ibClient.NextOrderId <= 0) { }
+                frmMain.SetConnectionStatus("Connected");
 
-            frmMain.SetConnectionStatus("Connected");
+                SubscribeAccount(ibClient, frmMain.AccountNumber());
+            }
+            catch (Exception e)
+            {
+                if(e.Message == strTimeOutMessage)
+                {
+                    frmMain.AddNotification("Connection timeout.  Please check that IB Gateway or TWS is running.");
+                    return;
+                }
+                throw;
+            }
+        }
 
-            SubscribeAccount(ibClient, frmMain.AccountNumber());
+        internal void Disconnect()
+        {
+            ibClient.ClientSocket.Close();
         }
 
         private void SubscribeAccount(EWrapperImpl ibClient, string accountNumber)

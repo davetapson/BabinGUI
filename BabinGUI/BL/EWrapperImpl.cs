@@ -49,8 +49,10 @@ namespace IBClient
         public virtual void error(Exception e)
         {
             logger.Error("Error: " + e);
-            Console.WriteLine("Exception thrown: "+e);
-            throw e;
+            Console.WriteLine("Exception thrown: "+ e);
+
+            Error error = new Error(0, 0, "Exception : " + e.Message);
+            RaiseErrorUpdatedEvent(new ErrorArgs(error));
         }
 
         public event EventHandler<ErrorArgs> ErrorUpdated;

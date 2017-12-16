@@ -63,6 +63,11 @@
             this.lblPositionSize = new System.Windows.Forms.Label();
             this.lblForNumberOfShares = new System.Windows.Forms.Label();
             this.lblNumberOfShares = new System.Windows.Forms.Label();
+            this.lblForPositionsValue = new System.Windows.Forms.Label();
+            this.lblPositionsValue = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.cboOffSets = new System.Windows.Forms.ComboBox();
+            this.btnConnect = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
@@ -284,7 +289,7 @@
             // lblConnectionStatus
             // 
             this.lblConnectionStatus.AutoSize = true;
-            this.lblConnectionStatus.Location = new System.Drawing.Point(174, 15);
+            this.lblConnectionStatus.Location = new System.Drawing.Point(255, 15);
             this.lblConnectionStatus.Name = "lblConnectionStatus";
             this.lblConnectionStatus.Size = new System.Drawing.Size(79, 13);
             this.lblConnectionStatus.TabIndex = 20;
@@ -311,16 +316,16 @@
             // lblForAccountValue
             // 
             this.lblForAccountValue.AutoSize = true;
-            this.lblForAccountValue.Location = new System.Drawing.Point(397, 70);
+            this.lblForAccountValue.Location = new System.Drawing.Point(397, 91);
             this.lblForAccountValue.Name = "lblForAccountValue";
-            this.lblForAccountValue.Size = new System.Drawing.Size(80, 13);
+            this.lblForAccountValue.Size = new System.Drawing.Size(111, 13);
             this.lblForAccountValue.TabIndex = 23;
-            this.lblForAccountValue.Text = "Account Value:";
+            this.lblForAccountValue.Text = "Net Liquidation Value:";
             // 
             // lblAccountValue
             // 
             this.lblAccountValue.AutoSize = true;
-            this.lblAccountValue.Location = new System.Drawing.Point(501, 70);
+            this.lblAccountValue.Location = new System.Drawing.Point(501, 91);
             this.lblAccountValue.Name = "lblAccountValue";
             this.lblAccountValue.Size = new System.Drawing.Size(77, 13);
             this.lblAccountValue.TabIndex = 24;
@@ -329,7 +334,7 @@
             // lblForPositionSize
             // 
             this.lblForPositionSize.AutoSize = true;
-            this.lblForPositionSize.Location = new System.Drawing.Point(397, 97);
+            this.lblForPositionSize.Location = new System.Drawing.Point(397, 120);
             this.lblForPositionSize.Name = "lblForPositionSize";
             this.lblForPositionSize.Size = new System.Drawing.Size(70, 13);
             this.lblForPositionSize.TabIndex = 25;
@@ -338,7 +343,7 @@
             // lblPositionSize
             // 
             this.lblPositionSize.AutoSize = true;
-            this.lblPositionSize.Location = new System.Drawing.Point(501, 97);
+            this.lblPositionSize.Location = new System.Drawing.Point(501, 120);
             this.lblPositionSize.Name = "lblPositionSize";
             this.lblPositionSize.Size = new System.Drawing.Size(67, 13);
             this.lblPositionSize.TabIndex = 26;
@@ -347,7 +352,7 @@
             // lblForNumberOfShares
             // 
             this.lblForNumberOfShares.AutoSize = true;
-            this.lblForNumberOfShares.Location = new System.Drawing.Point(397, 117);
+            this.lblForNumberOfShares.Location = new System.Drawing.Point(397, 140);
             this.lblForNumberOfShares.Name = "lblForNumberOfShares";
             this.lblForNumberOfShares.Size = new System.Drawing.Size(95, 13);
             this.lblForNumberOfShares.TabIndex = 27;
@@ -356,17 +361,67 @@
             // lblNumberOfShares
             // 
             this.lblNumberOfShares.AutoSize = true;
-            this.lblNumberOfShares.Location = new System.Drawing.Point(501, 117);
+            this.lblNumberOfShares.Location = new System.Drawing.Point(501, 140);
             this.lblNumberOfShares.Name = "lblNumberOfShares";
             this.lblNumberOfShares.Size = new System.Drawing.Size(92, 13);
             this.lblNumberOfShares.TabIndex = 28;
             this.lblNumberOfShares.Text = "Number of Shares";
+            // 
+            // lblForPositionsValue
+            // 
+            this.lblForPositionsValue.AutoSize = true;
+            this.lblForPositionsValue.Location = new System.Drawing.Point(397, 68);
+            this.lblForPositionsValue.Name = "lblForPositionsValue";
+            this.lblForPositionsValue.Size = new System.Drawing.Size(64, 13);
+            this.lblForPositionsValue.TabIndex = 29;
+            this.lblForPositionsValue.Text = "Cash Value:";
+            // 
+            // lblPositionsValue
+            // 
+            this.lblPositionsValue.AutoSize = true;
+            this.lblPositionsValue.Location = new System.Drawing.Point(501, 68);
+            this.lblPositionsValue.Name = "lblPositionsValue";
+            this.lblPositionsValue.Size = new System.Drawing.Size(79, 13);
+            this.lblPositionsValue.TabIndex = 30;
+            this.lblPositionsValue.Text = "Positions Value";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(397, 178);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(65, 13);
+            this.label7.TabIndex = 31;
+            this.label7.Text = "Price Offset:";
+            // 
+            // cboOffSets
+            // 
+            this.cboOffSets.FormattingEnabled = true;
+            this.cboOffSets.Location = new System.Drawing.Point(504, 175);
+            this.cboOffSets.Name = "cboOffSets";
+            this.cboOffSets.Size = new System.Drawing.Size(40, 21);
+            this.cboOffSets.TabIndex = 32;
+            // 
+            // btnConnect
+            // 
+            this.btnConnect.Location = new System.Drawing.Point(174, 10);
+            this.btnConnect.Name = "btnConnect";
+            this.btnConnect.Size = new System.Drawing.Size(75, 23);
+            this.btnConnect.TabIndex = 33;
+            this.btnConnect.Text = "Connect";
+            this.btnConnect.UseVisualStyleBackColor = true;
+            this.btnConnect.Click += new System.EventHandler(this.btnConnect_Click);
             // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(707, 644);
+            this.Controls.Add(this.btnConnect);
+            this.Controls.Add(this.cboOffSets);
+            this.Controls.Add(this.label7);
+            this.Controls.Add(this.lblPositionsValue);
+            this.Controls.Add(this.lblForPositionsValue);
             this.Controls.Add(this.lblNumberOfShares);
             this.Controls.Add(this.lblForNumberOfShares);
             this.Controls.Add(this.lblPositionSize);
@@ -447,6 +502,11 @@
         private System.Windows.Forms.Label lblPositionSize;
         private System.Windows.Forms.Label lblForNumberOfShares;
         private System.Windows.Forms.Label lblNumberOfShares;
+        private System.Windows.Forms.Label lblForPositionsValue;
+        private System.Windows.Forms.Label lblPositionsValue;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.ComboBox cboOffSets;
+        private System.Windows.Forms.Button btnConnect;
     }
 }
 
