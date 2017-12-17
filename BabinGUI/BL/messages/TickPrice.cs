@@ -2,7 +2,7 @@
 
 namespace BabinGUI.BL.messages
 {
-    public enum TickType { BID = 1, ASK = 2, LAST = 4, HIGH = 6, LOW = 7, CLOSE = 9 };
+    //public enum TickType { BID = 1, ASK = 2, LAST = 4, HIGH = 6, LOW = 7, CLOSE = 9 };
 
     public class TickPrice
     {

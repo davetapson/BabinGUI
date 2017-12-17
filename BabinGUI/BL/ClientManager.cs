@@ -12,6 +12,7 @@ using GUI;
 
 namespace IBClient
 {
+
     public class ClientManager
     {
         Logger logger = LogManager.GetCurrentClassLogger();
@@ -19,6 +20,7 @@ namespace IBClient
         private IBGatewayClientConnectionData iBGatewayClientConnectionData;
         private GUI.frmMain frmMain;
         string strTimeOutMessage = "Connecton Timeout";
+        int orderNumber;
 
         public void UpdateAccountValue(object sender, AccountValueArgs eventArgs) {
             switch (eventArgs.AccountValue.Key())
@@ -35,6 +37,10 @@ namespace IBClient
                 default:
                     break;
             }
+        }
+
+        public void UpdateMarketRule(object sender, MarketRuleArgs eventArgs) {
+            frmMain.MarketRules.Add(eventArgs.MarketRule);
         }
 
         public void UpdateTickPrice(object sender, TickPriceArgs eventArgs)
@@ -62,6 +68,8 @@ namespace IBClient
                 ibClient.AccountValueUpdated += UpdateAccountValue;
                 ibClient.TickPriceUpdated += UpdateTickPrice;
                 ibClient.ErrorUpdated += UpdateError;
+                ibClient.MarketRuleUpdated += UpdateMarketRule;
+                ibClient.ContractDetailsUpdated += UpdateContractDetails;
 
                 ibClient.ClientSocket.eConnect(iBGatewayClientConnectionData.Server,
                                                     iBGatewayClientConnectionData.Port,
@@ -86,6 +94,8 @@ namespace IBClient
                     if (DateTime.Now > connectionTime.AddSeconds(1)) { throw new Exception(strTimeOutMessage); }
                 }
 
+                orderNumber = ibClient.NextOrderId;
+
                 frmMain.SetConnectionStatus(true);
 
                 SubscribeAccount(ibClient, frmMain.AccountNumber());
@@ -99,6 +109,11 @@ namespace IBClient
                 }
                 throw;
             }
+        }
+
+        private void UpdateContractDetails(object sender, ContractDetailArgs eventArgs)
+        {
+            frmMain.UpdateContractDetail(eventArgs.ContractDetail);
         }
 
         internal void Disconnect()
@@ -119,8 +134,58 @@ namespace IBClient
 
         internal void CancelMarketData(int buyOrderId)
         {
-            ibClient.ClientSocket.cancelMktData(buyOrderId);
-            
+            ibClient.ClientSocket.cancelMktData(buyOrderId);            
+        }
+
+        internal void RequestContractDetails(int id, string ticker) {
+            Contract contract = new Contract();
+            contract.Symbol = ticker;
+            contract.SecType = "STK";
+            contract.Currency = "USD";
+            contract.Exchange = "SMART";
+
+            ibClient.ClientSocket.reqContractDetails(id, contract);
+        }
+
+        internal void RequestMarketRule(int ruleId)
+        {
+            ibClient.ClientSocket.reqMarketRule(ruleId);
+        }
+
+        internal void PlaceLimitBuyOrder(int id, string ticker, int quantity, decimal limitPrice)
+        {
+            Contract contract = new Contract();
+            contract.Symbol = ticker;
+            contract.SecType = "STK";
+            contract.Currency = "USD";
+            contract.Exchange = "SMART";
+
+            Order order = new Order();
+            order.OrderId = id;
+            order.Action = "BUY";
+            order.OrderType = "LMT";
+            order.TotalQuantity = quantity;
+            order.LmtPrice = (double)limitPrice;
+
+            ibClient.ClientSocket.placeOrder(orderNumber++, contract, order);
+        }
+
+        internal void PlaceStopOrder(int id, string ticker, int quantity, decimal stopPrice)
+        {
+            Contract contract = new Contract();
+            contract.Symbol = ticker;
+            contract.SecType = "STK";
+            contract.Currency = "USD";
+            contract.Exchange = "SMART";
+
+            Order order = new Order();
+            order.OrderId = id;
+            order.Action = "SELL";
+            order.OrderType = "STP";
+            order.AuxPrice = (double)stopPrice;
+            order.TotalQuantity = quantity;
+
+            ibClient.ClientSocket.placeOrder(orderNumber++, contract, order);
         }
     }
 }

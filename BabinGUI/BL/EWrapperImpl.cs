@@ -46,16 +46,17 @@ namespace IBClient
 
         public string BboExchange { get; private set; }
 
+        
+        // Errors
+        public event EventHandler<ErrorArgs> ErrorUpdated;
         public virtual void error(Exception e)
         {
             logger.Error("Error: " + e);
-            Console.WriteLine("Exception thrown: "+ e);
+            Console.WriteLine("Exception thrown: " + e);
 
             Error error = new Error(0, 0, "Exception : " + e.Message);
             RaiseErrorUpdatedEvent(new ErrorArgs(error));
         }
-
-        public event EventHandler<ErrorArgs> ErrorUpdated;
         public virtual void error(string errorString)
         {
             logger.Error("Error returned from IB: " + errorString);
@@ -65,12 +66,6 @@ namespace IBClient
 
             RaiseErrorUpdatedEvent(new ErrorArgs(error));
         }
-        public virtual void RaiseErrorUpdatedEvent(ErrorArgs eventArgs)
-        {
-            ErrorUpdated?.Invoke(this, eventArgs);
-        }
-
-        //! [error]
         public virtual void error(int id, int errorCode, string errorMsg)
         {
             logger.Error("Error returned from IB: id:" + id + " errorCode: " + errorCode + " errorMsg: " + errorMsg);
@@ -80,7 +75,12 @@ namespace IBClient
 
             RaiseErrorUpdatedEvent(new ErrorArgs(error));
         }
-        //! [error]
+        public virtual void RaiseErrorUpdatedEvent(ErrorArgs eventArgs)
+        {
+            ErrorUpdated?.Invoke(this, eventArgs);
+        }
+        
+        // Connection Closed
         public virtual void connectionClosed()
         {
             string message = "Connection closed.";
@@ -89,17 +89,12 @@ namespace IBClient
             Error error = new Error(0, 0, message); // lazy ass way of doing notifications todo
             RaiseErrorUpdatedEvent(new ErrorArgs(error));
         }
-        
-        public virtual void currentTime(long time) 
-        {
-            Console.WriteLine("Current Time: "+time+"\n");
-        }
 
         // Tick Price
         public event EventHandler<TickPriceArgs> TickPriceUpdated;
-        public virtual void tickPrice(int tickerId, int field, double price, TickAttrib attribs) 
+        public virtual void tickPrice(int tickerId, int field, double price, TickAttrib attribs)
         {
-            Console.WriteLine("Tick Price. Ticker Id:"+tickerId+", Field: "+field+", Price: "+price+", CanAutoExecute: "+attribs.CanAutoExecute + 
+            Console.WriteLine("Tick Price. Ticker Id:" + tickerId + ", Field: " + field + ", Price: " + price + ", CanAutoExecute: " + attribs.CanAutoExecute +
                 ", PastLimit: " + attribs.PastLimit + ", PreOpen: " + attribs.PreOpen);
 
             TickPrice tickPrice = new TickPrice(tickerId, field, price, attribs);
@@ -110,8 +105,11 @@ namespace IBClient
             TickPriceUpdated?.Invoke(this, eventArgs);
         }
 
-        //! [tickprice]
-
+        public virtual void currentTime(long time) 
+        {
+            Console.WriteLine("Current Time: "+time+"\n");
+        }
+        
         //! [ticksize]
         public virtual void tickSize(int tickerId, int field, int size)
         {
@@ -187,6 +185,7 @@ namespace IBClient
         }
         //! [accountsummaryend]
 
+        // AccountValue
         public event EventHandler<AccountValueArgs> AccountValueUpdated;
         public virtual void updateAccountValue(string key, string value, string currency, string accountName)
         {
@@ -246,16 +245,24 @@ namespace IBClient
             Console.WriteLine("OpenOrderEnd");
         }
         //! [openorderend]
-
-        //! [contractdetails]
+        
+        // Contract Details
+        public event EventHandler<ContractDetailArgs> ContractDetailsUpdated;
         public virtual void contractDetails(int reqId, ContractDetails contractDetails)
         {
             Console.WriteLine("ContractDetails begin. ReqId: " + reqId);
             printContractMsg(contractDetails.Summary);
             printContractDetailsMsg(contractDetails);
             Console.WriteLine("ContractDetails end. ReqId: " + reqId);
+
+            ContractDetail contractDetail = new ContractDetail(reqId, contractDetails);
+
+            RaiseContractDetailsUpdatedEvent(new ContractDetailArgs(contractDetail));
         }
-        //! [contractdetails]
+        public virtual void RaiseContractDetailsUpdatedEvent(ContractDetailArgs eventArgs)
+        {
+            ContractDetailsUpdated?.Invoke(this, eventArgs);
+        }
 
         public void printContractMsg(Contract contract)
         {
@@ -742,18 +749,31 @@ namespace IBClient
         }
         //! [rerouteMktDepthReq]
 
-        //! [marketRule]
+
+        // Market Rule
+        public event EventHandler<MarketRuleArgs> MarketRuleUpdated;
         public void marketRule(int marketRuleId, PriceIncrement[] priceIncrements) 
         {
             Console.WriteLine("Market Rule Id: " + marketRuleId);
+
+            MarketRule marketRule = new MarketRule();
+            marketRule.MarketRuleId = marketRuleId;
+
+
             foreach (var priceIncrement in priceIncrements) 
             {
                 Console.WriteLine("Low Edge: {0}, Increment: {1}", ((decimal)priceIncrement.LowEdge).ToString(), ((decimal)priceIncrement.Increment).ToString());
+                marketRule.MarketRuleIncrements.Add(new MarketRuleIncrement((decimal)priceIncrement.LowEdge, (decimal)priceIncrement.Increment));
             }
-        }
-        //! [marketRule]
 
-		//! [pnl]
+            RaiseMarketRuleUpdatedEvent(new MarketRuleArgs(marketRule));
+        }
+        public virtual void RaiseMarketRuleUpdatedEvent(MarketRuleArgs eventArgs)
+        {
+            MarketRuleUpdated?.Invoke(this, eventArgs);
+        }
+
+        //! [pnl]
         public void pnl(int reqId, double dailyPnL, double unrealizedPnL)
         {
             Console.WriteLine("PnL. Request Id: {0}, Daily PnL: {1}, Unrealized PnL: {2}", reqId, dailyPnL, unrealizedPnL);

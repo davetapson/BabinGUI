@@ -80,13 +80,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BL\ClientManager.cs" />
+    <Compile Include="BL\eventArgs\ContractDetailsArgs.cs" />
     <Compile Include="BL\eventArgs\ErrorArgs.cs" />
     <Compile Include="BL\eventArgs\AccountValueArgs.cs" />
+    <Compile Include="BL\eventArgs\MarketRuleArgs.cs" />
     <Compile Include="BL\eventArgs\TickPriceArgs.cs" />
     <Compile Include="BL\EWrapperImpl.cs" />
     <Compile Include="BL\IBGatewayClientConnectionData.cs" />
+    <Compile Include="BL\messages\ContractDetail.cs" />
     <Compile Include="BL\messages\Error.cs" />
+    <Compile Include="BL\messages\MarketRule.cs" />
+    <Compile Include="BL\messages\MarketRuleIncrement.cs" />
     <Compile Include="BL\messages\TickPrice.cs" />
+    <Compile Include="BL\utils\Utils.cs" />
     <Compile Include="BuyOrder.cs" />
     <Compile Include="frmMain.cs">
       <SubType>Form</SubType>

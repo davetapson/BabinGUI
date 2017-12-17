@@ -43,6 +43,7 @@ namespace GUI
         public decimal PriceOffSet { get; set; }
         public int CurrentPositionSize { get; set; }
         public decimal CurrentPrice { get; internal set; }
+        public decimal Low { get; set; } = -1;
         public string OrderStatus { get; set; } = "Pending"; // todo enum class
     }
 }

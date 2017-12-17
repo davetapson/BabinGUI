@@ -151,5 +151,41 @@ namespace BabinGUI.Properties {
                 this["RiskPercent"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("75")]
+        public int Col9Width {
+            get {
+                return ((int)(this["Col9Width"]));
+            }
+            set {
+                this["Col9Width"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("75")]
+        public int Col10Width {
+            get {
+                return ((int)(this["Col10Width"]));
+            }
+            set {
+                this["Col10Width"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("75")]
+        public int Col11Width {
+            get {
+                return ((int)(this["Col11Width"]));
+            }
+            set {
+                this["Col11Width"] = value;
+            }
+        }
     }
 }

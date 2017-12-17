@@ -11,6 +11,8 @@ using IBClient;
 using IBApi;
 using BabinGUI.BL.eventArgs;
 using System.Globalization;
+using BabinGUI.BL.utils;
+using BabinGUI.BL.messages;
 
 namespace GUI
 {
@@ -24,6 +26,10 @@ namespace GUI
         decimal _netLiquidation = -1;
         decimal _availableFunds = -1;
 
+        public List<MarketRule> MarketRules { get; internal set; }
+        private List<ContractDetail> contractDetails;
+        
+
         public frmMain()
         {
             InitializeComponent();
@@ -35,6 +41,7 @@ namespace GUI
             InitializeOffsetsComboBox();
             InitializeGrid();
             InitializeNumberUpDowns();
+            contractDetails = new List<ContractDetail>();
         }
 
         private void InitializeNumberUpDowns()
@@ -82,6 +89,22 @@ namespace GUI
             dgvBuyOrders.Columns[7].Width = BabinGUI.Properties.Settings.Default.Col7Width; ;
             dgvBuyOrders.Columns[7].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
 
+            // Current Position Size
+            dgvBuyOrders.Columns[8].Width = BabinGUI.Properties.Settings.Default.Col8Width; ;
+            dgvBuyOrders.Columns[8].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+
+            // Current Price
+            dgvBuyOrders.Columns[9].Width = BabinGUI.Properties.Settings.Default.Col9Width; ;
+            dgvBuyOrders.Columns[9].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+
+            // Low
+            dgvBuyOrders.Columns[10].Width = BabinGUI.Properties.Settings.Default.Col10Width; ;
+            dgvBuyOrders.Columns[10].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+
+            // Order Status
+            dgvBuyOrders.Columns[11].Width = BabinGUI.Properties.Settings.Default.Col11Width; ;
+            dgvBuyOrders.Columns[11].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+
             // Delete
             DataGridViewButtonColumn deleteButtonColumn = new DataGridViewButtonColumn();
             deleteButtonColumn.Name = "Delete";
@@ -105,13 +128,46 @@ namespace GUI
 
         internal void UpdateTickPrice(TickPriceArgs eventArgs)
         {
-            if (eventArgs.TickPrice.Field == TickType.ASK)
+            BuyOrder buyOrder;
+
+            switch (eventArgs.TickPrice.Field)  
             {
-                var buyOrder = buyOrders.FirstOrDefault(i => i.Id == eventArgs.TickPrice.TickerId);
-                buyOrder.CurrentPrice = (decimal)eventArgs.TickPrice.Price;
-                dgvBuyOrders.Invoke(new Action(() => dgvBuyOrders.Refresh()));
+               case (TickType.ASK):
+                    buyOrder = buyOrders.FirstOrDefault(i => i.Id == eventArgs.TickPrice.TickerId);
+                    buyOrder.CurrentPrice = (decimal)eventArgs.TickPrice.Price;
+                    dgvBuyOrders.Invoke(new Action(() => dgvBuyOrders.Refresh()));
+                    CheckForBuy(buyOrders);
+                    break;
+                case (TickType.LOW):
+                    buyOrder = buyOrders.FirstOrDefault(i => i.Id == eventArgs.TickPrice.TickerId);
+                    buyOrder.Low = (decimal)eventArgs.TickPrice.Price;
+                    dgvBuyOrders.Invoke(new Action(() => dgvBuyOrders.Refresh()));
+                    break;
             }
-            
+
+        }
+
+        internal void UpdateContractDetail(ContractDetail contractDetail)
+        {
+            contractDetails.Add(contractDetail);
+            if (contractDetail.ContractDetails.MarketRuleIds != null)
+            {
+                foreach(int marketRuleId in contractDetail.ContractDetails.MarketRuleIds)
+                {
+                    clientManager.RequestMarketRule(marketRuleId);
+                }                
+            }
+        }
+
+        private void CheckForBuy(BindingList<BuyOrder> buyOrders)
+        {
+            foreach(BuyOrder buyOrder in buyOrders)
+            {
+                if (buyOrder.StopBuyLimit < buyOrder.CurrentPrice)
+                {
+                   clientManager.PlaceLimitBuyOrder(buyOrder.Id, buyOrder.Ticker, buyOrder.CurrentPositionSize, buyOrder.CurrentPrice);
+                }
+            }
         }
 
         private void dgvBuyOrders_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -148,7 +204,11 @@ namespace GUI
             BabinGUI.Properties.Settings.Default.Col5Width = dgvBuyOrders.Columns[6].Width;
             BabinGUI.Properties.Settings.Default.Col6Width = dgvBuyOrders.Columns[7].Width;
             BabinGUI.Properties.Settings.Default.Col7Width = dgvBuyOrders.Columns[8].Width;
-            BabinGUI.Properties.Settings.Default.Col8Width = dgvBuyOrders.Columns[0].Width;
+            BabinGUI.Properties.Settings.Default.Col8Width = dgvBuyOrders.Columns[9].Width;
+            BabinGUI.Properties.Settings.Default.Col9Width = dgvBuyOrders.Columns[10].Width;
+            BabinGUI.Properties.Settings.Default.Col10Width = dgvBuyOrders.Columns[11].Width;
+            BabinGUI.Properties.Settings.Default.Col11Width = dgvBuyOrders.Columns[0].Width;
+            
             BabinGUI.Properties.Settings.Default.Save();
         }
 
@@ -163,21 +223,13 @@ namespace GUI
         {
             bool result = decimal.TryParse(netLiquidation, NumberStyles.Any, CultureInfo.InvariantCulture, out _netLiquidation);
 
-            string value = FormatStringToCurrency(netLiquidation);
+            string value = Utils.FormatStringToCurrency(netLiquidation);
             txtNetLiquidation.Invoke(new Action(() => txtNetLiquidation.Text = value));
         }    
 
-        private string FormatStringToCurrency(string netLiquidation)
-        {
-            decimal value;
-            bool result = decimal.TryParse(netLiquidation, NumberStyles.Any, CultureInfo.InvariantCulture, out value);
-
-            return string.Format("{0:N2}", value);
-        }
-
         internal void SetTotalCashValue(string accountValue)
         {
-            lblPositionsValue.Invoke(new Action(() => lblPositionsValue.Text = string.Format("{0:C}", accountValue)));
+            //lblPositionsValue.Invoke(new Action(() => lblPositionsValue.Text = string.Format("{0:C}", accountValue)));
         }
 
         public void SetConnectionStatus(bool connected)
@@ -205,7 +257,7 @@ namespace GUI
         {
             bool result = decimal.TryParse(availableFunds, NumberStyles.Any, CultureInfo.InvariantCulture, out _availableFunds);
 
-            string value = FormatStringToCurrency(availableFunds);
+            string value = Utils.FormatStringToCurrency(availableFunds);
             txtAvailableFunds.Invoke(new Action(() => txtAvailableFunds.Text = value));
         }
 
@@ -250,11 +302,13 @@ namespace GUI
         {
             try
             {
-                // create buy order
+                // create buy order - this will add to grid
                 BuyOrder buyOrder = new BuyOrder(GetNextId(), txtTicker.Text, numStop.Value, numStopBuyLimit.Value, numRiskPercent.Value, numDollarValue.Value, rdoUseRiskPercent.Checked, Convert.ToDecimal(cboOffSet.Text));
                 buyOrders.Add(buyOrder);
-
                 SubscribeTicker(buyOrder);
+
+                // req contract details for Order
+                clientManager.RequestContractDetails(buyOrder.Id, buyOrder.Ticker);
             }
             catch (ArgumentNullException ae)
             {
