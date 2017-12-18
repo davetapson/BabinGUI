@@ -40,8 +40,6 @@
             this.txtNetLiquidation = new System.Windows.Forms.TextBox();
             this.txtAvailableFunds = new System.Windows.Forms.TextBox();
             this.grpOrder = new System.Windows.Forms.GroupBox();
-            this.cboOffSet = new System.Windows.Forms.ComboBox();
-            this.label7 = new System.Windows.Forms.Label();
             this.radioButton2 = new System.Windows.Forms.RadioButton();
             this.rdoUseRiskPercent = new System.Windows.Forms.RadioButton();
             this.btnPlaceOrder = new System.Windows.Forms.Button();
@@ -92,7 +90,7 @@
             this.dgvBuyOrders.Name = "dgvBuyOrders";
             this.dgvBuyOrders.ReadOnly = true;
             this.dgvBuyOrders.RowHeadersVisible = false;
-            this.dgvBuyOrders.Size = new System.Drawing.Size(952, 346);
+            this.dgvBuyOrders.Size = new System.Drawing.Size(1092, 346);
             this.dgvBuyOrders.TabIndex = 0;
             this.dgvBuyOrders.TabStop = false;
             // 
@@ -105,7 +103,7 @@
             "Notifications"});
             this.lstNotifications.Location = new System.Drawing.Point(12, 550);
             this.lstNotifications.Name = "lstNotifications";
-            this.lstNotifications.Size = new System.Drawing.Size(952, 82);
+            this.lstNotifications.Size = new System.Drawing.Size(1092, 82);
             this.lstNotifications.TabIndex = 19;
             // 
             // lblConnectionStatus
@@ -167,8 +165,6 @@
             // 
             // grpOrder
             // 
-            this.grpOrder.Controls.Add(this.cboOffSet);
-            this.grpOrder.Controls.Add(this.label7);
             this.grpOrder.Controls.Add(this.radioButton2);
             this.grpOrder.Controls.Add(this.rdoUseRiskPercent);
             this.grpOrder.Controls.Add(this.btnPlaceOrder);
@@ -188,23 +184,6 @@
             this.grpOrder.TabIndex = 36;
             this.grpOrder.TabStop = false;
             this.grpOrder.Text = "Place Order";
-            // 
-            // cboOffSet
-            // 
-            this.cboOffSet.FormattingEnabled = true;
-            this.cboOffSet.Location = new System.Drawing.Point(102, 96);
-            this.cboOffSet.Name = "cboOffSet";
-            this.cboOffSet.Size = new System.Drawing.Size(40, 21);
-            this.cboOffSet.TabIndex = 47;
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(19, 99);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(65, 13);
-            this.label7.TabIndex = 46;
-            this.label7.Text = "Price Offset:";
             // 
             // radioButton2
             // 
@@ -350,7 +329,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(976, 644);
+            this.ClientSize = new System.Drawing.Size(1116, 644);
             this.Controls.Add(this.grpOrder);
             this.Controls.Add(this.txtAvailableFunds);
             this.Controls.Add(this.txtNetLiquidation);
@@ -395,8 +374,6 @@
         private System.Windows.Forms.TextBox txtNetLiquidation;
         private System.Windows.Forms.TextBox txtAvailableFunds;
         private System.Windows.Forms.GroupBox grpOrder;
-        private System.Windows.Forms.ComboBox cboOffSet;
-        private System.Windows.Forms.Label label7;
         private System.Windows.Forms.RadioButton radioButton2;
         private System.Windows.Forms.RadioButton rdoUseRiskPercent;
         private System.Windows.Forms.Button btnPlaceOrder;

@@ -38,7 +38,6 @@ namespace GUI
 
         private void InitializeControls()
         {
-            InitializeOffsetsComboBox();
             InitializeGrid();
             InitializeNumberUpDowns();
             contractDetails = new List<ContractDetail>();
@@ -51,10 +50,10 @@ namespace GUI
 
         private void InitializeGrid()
         {
-            BuyOrder buyOrder = new BuyOrder(1, "AA", 10.00m, 10.01m, 2.0m, 0, true, 0.1m);
-            buyOrders.Add(buyOrder);
-            buyOrder = new BuyOrder(2, "BB", 11.00m, 11.01m, 0, 2.5m, false, 0.5m);
-            buyOrders.Add(buyOrder);
+            //BuyOrder buyOrder = new BuyOrder(1, "AA", 10.00m, 10.01m, 2.0m, 0, true, 0.1m);
+            //buyOrders.Add(buyOrder);
+            //buyOrder = new BuyOrder(2, "BB", 11.00m, 11.01m, 0, 2.5m, false, 0.5m);
+            //buyOrders.Add(buyOrder);
             dgvBuyOrders.DataSource = buyOrders;
             
 
@@ -126,48 +125,57 @@ namespace GUI
             dgvBuyOrders.CellClick += dgvBuyOrders_CellClick;
         }
 
-        internal void UpdateTickPrice(TickPriceArgs eventArgs)
-        {
-            BuyOrder buyOrder;
-
-            switch (eventArgs.TickPrice.Field)  
-            {
-               case (TickType.ASK):
-                    buyOrder = buyOrders.FirstOrDefault(i => i.Id == eventArgs.TickPrice.TickerId);
-                    buyOrder.CurrentPrice = (decimal)eventArgs.TickPrice.Price;
-                    dgvBuyOrders.Invoke(new Action(() => dgvBuyOrders.Refresh()));
-                    CheckForBuy(buyOrders);
-                    break;
-                case (TickType.LOW):
-                    buyOrder = buyOrders.FirstOrDefault(i => i.Id == eventArgs.TickPrice.TickerId);
-                    buyOrder.Low = (decimal)eventArgs.TickPrice.Price;
-                    dgvBuyOrders.Invoke(new Action(() => dgvBuyOrders.Refresh()));
-                    break;
-            }
-
-        }
-
-        internal void UpdateContractDetail(ContractDetail contractDetail)
-        {
-            contractDetails.Add(contractDetail);
-            if (contractDetail.ContractDetails.MarketRuleIds != null)
-            {
-                foreach(int marketRuleId in contractDetail.ContractDetails.MarketRuleIds)
-                {
-                    clientManager.RequestMarketRule(marketRuleId);
-                }                
-            }
-        }
-
         private void CheckForBuy(BindingList<BuyOrder> buyOrders)
         {
             foreach(BuyOrder buyOrder in buyOrders)
             {
-                if (buyOrder.StopBuyLimit < buyOrder.CurrentPrice)
+                buyOrder.StopOrderPrice = CalculateStopOrderPrice(buyOrder);
+
+                if (buyOrder.Low > 0 &&
+                    buyOrder.StopOrderPrice > 0 &&
+                    buyOrder.RiskValue > 0)
                 {
-                   clientManager.PlaceLimitBuyOrder(buyOrder.Id, buyOrder.Ticker, buyOrder.CurrentPositionSize, buyOrder.CurrentPrice);
+                    if ((buyOrder.StopBuyLimit < buyOrder.CurrentPrice) &&
+                        (buyOrder.OrderStatus == "Pending"))
+                    {
+                        clientManager.PlaceLimitBuyOrder(buyOrder.Id, buyOrder.Ticker, buyOrder.CurrentPositionSize, buyOrder.StopOrderPrice);
+                        buyOrder.OrderStatus = "Order Placed";
+                    } 
                 }
             }
+            RefreshGrid(dgvBuyOrders);
+        }
+
+        private void RefreshGrid(DataGridView dataGridView)
+        {
+            if (dataGridView.InvokeRequired)
+            {
+                dataGridView.Invoke(new MethodInvoker(() => dataGridView.Refresh()));
+                dataGridView.Invoke(new MethodInvoker(() => DoGridRowBGColour(dataGridView))); 
+            }
+            else
+            {
+                dataGridView.Refresh();
+                DoGridRowBGColour(dataGridView);
+            }
+        }
+
+        private void DoGridRowBGColour(DataGridView dataGridView)
+        {
+            foreach (DataGridViewRow row in dataGridView.Rows)
+            {
+                if (row.Cells[14].Value.ToString() != "Pending")
+                {
+                    row.DefaultCellStyle.BackColor = Color.LightGray;
+                    //row.ReadOnly = true;
+                }
+            }
+                
+        }
+
+        private decimal CalculateStopOrderPrice(BuyOrder buyOrder)
+        {
+            return buyOrder.Low - buyOrder.MinTick;
         }
 
         private void dgvBuyOrders_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -176,17 +184,6 @@ namespace GUI
             {
                 buyOrders.RemoveAt(e.RowIndex);
             }
-        }
-
-        private void InitializeOffsetsComboBox()
-        {
-            string offSetString = BabinGUI.Properties.Settings.Default.PriceOffset;
-            string[] offSets = offSetString.Split('^');
-            foreach (string offSet in offSets)
-            {
-                cboOffSet.Items.Add(Convert.ToDecimal(offSet));
-            }
-            if (cboOffSet.Items.Count > 0) cboOffSet.SelectedIndex = 0;
         }
 
         private void frmMain_Load(object sender, EventArgs e)
@@ -219,14 +216,6 @@ namespace GUI
             clientManager.Connect();
         }
 
-        internal void UpdateNetLiquidation(string netLiquidation)
-        {
-            bool result = decimal.TryParse(netLiquidation, NumberStyles.Any, CultureInfo.InvariantCulture, out _netLiquidation);
-
-            string value = Utils.FormatStringToCurrency(netLiquidation);
-            txtNetLiquidation.Invoke(new Action(() => txtNetLiquidation.Text = value));
-        }    
-
         internal void SetTotalCashValue(string accountValue)
         {
             //lblPositionsValue.Invoke(new Action(() => lblPositionsValue.Text = string.Format("{0:C}", accountValue)));
@@ -252,31 +241,7 @@ namespace GUI
         {
             return txtAccountNumber.Text;
         }
-
-        public void UpdateAvailableFunds(string availableFunds)
-        {
-            bool result = decimal.TryParse(availableFunds, NumberStyles.Any, CultureInfo.InvariantCulture, out _availableFunds);
-
-            string value = Utils.FormatStringToCurrency(availableFunds);
-            txtAvailableFunds.Invoke(new Action(() => txtAvailableFunds.Text = value));
-        }
-
-        public void UpdateNotifications(ErrorArgs eventArgs)
-        {
-            if (eventArgs.Error.Message == "Connection closed.")
-            {
-                eventArgs.Error.Message = eventArgs.Error.Message + " " + DateTime.Now;
-                SetConnectionStatus(false);
-            }
-            lstNotifications.Invoke(new Action(() => lstNotifications.Items.Insert(0, eventArgs.Error.Message)));
-            lstNotifications.Invoke(new Action(() => updateNotifications()));
-        }
-
-        private void updateNotifications()
-        {
-            lstNotifications.Items[0] = lstNotifications.Items[0];
-        }
-
+        
         private void btnConnect_Click(object sender, EventArgs e)
         {
             if(btnConnect.Text == "Connect")
@@ -303,7 +268,7 @@ namespace GUI
             try
             {
                 // create buy order - this will add to grid
-                BuyOrder buyOrder = new BuyOrder(GetNextId(), txtTicker.Text, numStop.Value, numStopBuyLimit.Value, numRiskPercent.Value, numDollarValue.Value, rdoUseRiskPercent.Checked, Convert.ToDecimal(cboOffSet.Text));
+                BuyOrder buyOrder = new BuyOrder(GetNextId(), txtTicker.Text, numStop.Value, numStopBuyLimit.Value, numRiskPercent.Value, numDollarValue.Value, rdoUseRiskPercent.Checked);
                 buyOrders.Add(buyOrder);
                 SubscribeTicker(buyOrder);
 
@@ -354,25 +319,97 @@ namespace GUI
 
                 if (buyOrder.UseRiskPercent)
                 {
-                    decimal positionValue = _netLiquidation * (decimal)buyOrder.RiskPercent / 100;
-                    decimal funds = _availableFunds < positionValue ? _availableFunds : positionValue;
-                    int positionSize = (int)Math.Floor(funds / buyOrder.CurrentPrice);
-
-                    buyOrder.CurrentPositionSize = positionSize;
-                } else
+                    buyOrder.RiskValue = _netLiquidation * (decimal)buyOrder.RiskPercent / 100;
+                    decimal funds = _availableFunds < buyOrder.RiskValue ? _availableFunds : buyOrder.RiskValue;
+                    buyOrder.CurrentPositionSize = (int)Math.Floor(funds / buyOrder.CurrentPrice);
+                }
+                else
                 {
                     decimal funds = _availableFunds < buyOrder.DollarValue ? _availableFunds : (decimal)buyOrder.DollarValue;
                     int positionSize = (int)Math.Floor(funds / buyOrder.CurrentPrice);
-
                     buyOrder.CurrentPositionSize = positionSize;
                 }
             }
 
-            dgvBuyOrders.Refresh();
+            RefreshGrid(dgvBuyOrders);            
         }
 
         private void txtAvailableFunds_TextChanged(object sender, EventArgs e)
         {
+            CalculatePositionSize();
+        }
+
+        public void UpdateAvailableFunds(string availableFunds)
+        {
+            bool result = decimal.TryParse(availableFunds, NumberStyles.Any, CultureInfo.InvariantCulture, out _availableFunds);
+
+            string value = Utils.FormatStringToCurrency(availableFunds);
+            txtAvailableFunds.Invoke(new Action(() => txtAvailableFunds.Text = value));
+        }
+
+        internal void UpdateContractDetail(ContractDetail contractDetail)
+        {
+            contractDetails.Add(contractDetail);
+            if (contractDetail.ContractDetails.MarketRuleIds != null)
+            {
+                foreach (int marketRuleId in contractDetail.ContractDetails.MarketRuleIds)
+                {
+                    clientManager.RequestMarketRule(marketRuleId);
+                }
+            }
+
+            BuyOrder buyOrder = buyOrders.FirstOrDefault(x => x.Id == contractDetail.ReqId);
+            buyOrder.MinTick = (decimal)contractDetail.ContractDetails.MinTick;
+        }
+
+        internal void UpdateNetLiquidation(string netLiquidation)
+        {
+            bool result = decimal.TryParse(netLiquidation, NumberStyles.Any, CultureInfo.InvariantCulture, out _netLiquidation);
+
+            string value = Utils.FormatStringToCurrency(netLiquidation);
+            txtNetLiquidation.Invoke(new Action(() => txtNetLiquidation.Text = value));
+        }
+
+        public void UpdateNotifications(ErrorArgs eventArgs)
+        {
+            if (eventArgs.Error.Message == "Connection closed.")
+            {
+                eventArgs.Error.Message = eventArgs.Error.Message + " " + DateTime.Now;
+                SetConnectionStatus(false);
+            }
+            lstNotifications.Invoke(new Action(() => lstNotifications.Items.Insert(0, eventArgs.Error.Message)));
+            lstNotifications.Invoke(new Action(() => updateNotifications()));
+        }
+
+        private void updateNotifications()
+        {
+            lstNotifications.Items[0] = lstNotifications.Items[0];
+        }
+
+        internal void UpdateTickPrice(TickPriceArgs eventArgs)
+        {
+            BuyOrder buyOrder;
+
+            switch (eventArgs.TickPrice.Field)
+            {
+                case (TickType.ASK):
+                    buyOrder = buyOrders.FirstOrDefault(i => i.Id == eventArgs.TickPrice.TickerId);
+                    if(buyOrder.OrderStatus == "Pending")
+                    {
+                        buyOrder.CurrentPrice = (decimal)eventArgs.TickPrice.Price;
+                        dgvBuyOrders.Invoke(new Action(() => dgvBuyOrders.Refresh()));
+                        CheckForBuy(buyOrders);
+                    }                    
+                    break;
+                case (TickType.LOW):
+                    buyOrder = buyOrders.FirstOrDefault(i => i.Id == eventArgs.TickPrice.TickerId);
+                    if (buyOrder.OrderStatus == "Pending")
+                    {
+                        buyOrder.Low = (decimal)eventArgs.TickPrice.Price;
+                        dgvBuyOrders.Invoke(new Action(() => dgvBuyOrders.Refresh()));
+                    }
+                    break;
+            }
             CalculatePositionSize();
         }
     }
